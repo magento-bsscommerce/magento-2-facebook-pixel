@@ -96,10 +96,7 @@ fbq('track', 'AddToWishlist');
 <?php elseif ($action == 'catalog_category_view') :?>
 fbq('track', 'PageView');
 <?php
-try {
     $categoryData = $block->getCategoryData();
-} catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-}
 if ($categoryData !== null) : ?>
 fbq('track', 'ViewContent', {
     content_name: '<?php echo $block
@@ -110,9 +107,9 @@ fbq('track', 'ViewContent', {
     currency: '<?php echo $block->escapeHtml($categoryData['currency']) ?>'
 });
 <?php endif; ?>
-<?php elseif ($action == 'customer_account_index' && !in_array('account_page', $listDisableCode) ) : ?>
+<?php elseif ($action == 'customer_account_index' && !in_array('account_page', $listDisableCode)) : ?>
 fbq('track', 'PageView');
-<?php elseif(!in_array('cms_page', $listDisableCode)) : ?>
+<?php elseif (!in_array('cms_page', $listDisableCode)) : ?>
 fbq('track', 'PageView');
 <?php endif; ?>
 

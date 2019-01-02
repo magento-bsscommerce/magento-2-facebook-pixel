@@ -92,7 +92,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * Constructor
      *
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Apptrian\FacebookPixel\Helper\Data $helper
+     * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Catalog\Helper\Data $catalogHelper
      * @param \Magento\Tax\Model\Config $taxConfig
@@ -136,7 +136,8 @@ class Code extends \Magento\Framework\View\Element\Template
     {
         $list = $this->helper->getConfig(
             'bss_facebook_pixel/event_tracking/disable_code',
-            $this->getStoreId());
+            $this->getStoreId()
+        );
         $list = explode(',', $list);
         return $list;
     }

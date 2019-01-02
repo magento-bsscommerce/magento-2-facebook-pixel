@@ -25,7 +25,7 @@ class Purchase extends \Magento\Framework\View\Element\Template
     public $helper;
 
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var \Magento\Checkout\Model\SessionFactory
      */
     public $checkoutSession;
 
@@ -33,14 +33,14 @@ class Purchase extends \Magento\Framework\View\Element\Template
      * Constructor
      *
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Apptrian\FacebookPixel\Helper\Data $helper
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Bss\FacebookPixel\Helper\Data $helper
+     * @param \Magento\Checkout\Model\SessionFactory $checkoutSession
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Apptrian\FacebookPixel\Helper\Data $helper,
-        \Magento\Checkout\Model\Session $checkoutSession,
+        \Bss\FacebookPixel\Helper\Data $helper,
+        \Magento\Checkout\Model\SessionFactory $checkoutSession,
         array $data = []
     ) {
         $this->helper          = $helper;
@@ -55,7 +55,7 @@ class Purchase extends \Magento\Framework\View\Element\Template
      */
     public function getOrderData()
     {
-        $order   = $this->checkoutSession->getLastRealOrder();
+        $order   = $this->checkoutSession->create()->getLastRealOrder();
         $orderId = $order->getIncrementId();
 
         if ($orderId) {
