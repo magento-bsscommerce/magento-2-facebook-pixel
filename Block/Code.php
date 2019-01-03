@@ -89,13 +89,18 @@ class Code extends \Magento\Framework\View\Element\Template
     public $currentCurrencyCode = null;
 
     /**
-     * Constructor
-     *
-     * @param \Magento\Framework\App\Helper\Context $context
+     * @var Purchase
+     */
+    protected $purchase;
+
+    /**
+     * Code constructor.
+     * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Catalog\Helper\Data $catalogHelper
      * @param \Magento\Tax\Model\Config $taxConfig
+     * @param Purchase $purchase
      * @param array $data
      */
     public function __construct(
@@ -104,6 +109,7 @@ class Code extends \Magento\Framework\View\Element\Template
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Catalog\Helper\Data $catalogHelper,
         \Magento\Tax\Model\Config $taxConfig,
+        \Bss\FacebookPixel\Block\Purchase $purchase,
         array $data = []
     ) {
         $this->storeManager  = $context->getStoreManager();
@@ -111,7 +117,16 @@ class Code extends \Magento\Framework\View\Element\Template
         $this->coreRegistry  = $coreRegistry;
         $this->catalogHelper = $catalogHelper;
         $this->taxConfig     = $taxConfig;
+        $this->purchase      = $purchase;
         parent::__construct($context, $data);
+    }
+
+    /**
+     * @return Purchase
+     */
+    public function getPurchase()
+    {
+        return $this->purchase;
     }
 
     /**
@@ -391,30 +406,10 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getFinalPrice($product, $price = null)
     {
-        if ($price === null) {
-            $price = $product->getFinalPrice();
-        }
-
-        if ($price === null) {
-            $price = $product->getData('special_price');
-        }
+       $price = $this->resultPriceFinal($product, $price);
 
         $productType = $product->getTypeId();
-
-        // 1. Convert to current currency if needed
-
-        // Convert price if base and current currency are not the same
-        // Except for configurable products they already have currency converted
-        if (($this->getBaseCurrencyCode() !== $this->getCurrentCurrencyCode())
-            && $productType != 'configurable'
-        ) {
-            // Convert to from base currency to current currency
-            $price = $this->getStore()->getBaseCurrency()
-                ->convert($price, $this->getCurrentCurrencyCode());
-        }
-
-        // 2. Apply tax if needed
-
+        //  Apply tax if needed
         // Simple, Virtual, Downloadable products price is without tax
         // Grouped products have associated products without tax
         // Bundle products price already have tax included/excluded
@@ -455,6 +450,30 @@ class Code extends \Magento\Framework\View\Element\Template
             }
         }
 
+        return $price;
+    }
+
+    private function resultPriceFinal($product, $price)
+    {
+        if ($price === null) {
+            $price = $product->getFinalPrice();
+        }
+
+        if ($price === null) {
+            $price = $product->getData('special_price');
+        }
+        $productType = $product->getTypeId();
+        // 1. Convert to current currency if needed
+
+        // Convert price if base and current currency are not the same
+        // Except for configurable products they already have currency converted
+        if (($this->getBaseCurrencyCode() !== $this->getCurrentCurrencyCode())
+            && $productType != 'configurable'
+        ) {
+            // Convert to from base currency to current currency
+            $price = $this->getStore()->getBaseCurrency()
+                ->convert($price, $this->getCurrentCurrencyCode());
+        }
         return $price;
     }
 
