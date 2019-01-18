@@ -10,12 +10,12 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixels
+ * @package   Bss_FacebookPixel
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
-namespace Bss\FacebookPixels\Observer;
+namespace Bss\FacebookPixel\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
@@ -23,7 +23,7 @@ class InitiateCheckout implements ObserverInterface {
 
 
     /**
-     * @var \Bss\FacebookPixels\Model\Session
+     * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
 
@@ -33,20 +33,20 @@ class InitiateCheckout implements ObserverInterface {
     protected $checkoutSession;
 
     /**
-     * @var \Bss\FacebookPixels\Helper\Data
+     * @var \Bss\FacebookPixel\Helper\Data
      */
     protected $fbPixelHelper;
 
     /**
      * InitiateCheckout constructor.
-     * @param \Bss\FacebookPixels\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Bss\FacebookPixels\Helper\Data $helper
+     * @param \Bss\FacebookPixel\Helper\Data $helper
      */
     public function __construct(
-        \Bss\FacebookPixels\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Bss\FacebookPixels\Helper\Data $helper
+        \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->checkoutSession = $checkoutSession;

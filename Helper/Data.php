@@ -10,12 +10,12 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixels
+ * @package   Bss_FacebookPixel
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
-namespace Bss\FacebookPixels\Helper;
+namespace Bss\FacebookPixel\Helper;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -39,7 +39,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Bss\FacebookPixels\Model\Session $fbPixelSession
+        \Bss\FacebookPixel\Model\Session $fbPixelSession
     ) {
         $this->scopeConfig          = $context->getScopeConfig();
         $this->moduleList           = $moduleList;
@@ -83,6 +83,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getCurrencyCode(){
         return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
     }
+
+    /**
+     * @return \Bss\FacebookPixel\Model\Session
+     */
     public function getSession(){
         return $this->fbPixelSession;
     }

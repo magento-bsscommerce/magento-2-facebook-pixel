@@ -10,12 +10,12 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixels
+ * @package   Bss_FacebookPixel
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
-namespace Bss\FacebookPixels\Block;
+namespace Bss\FacebookPixel\Block;
 
 use Magento\Customer\CustomerData\SectionSourceInterface;
 use Magento\Customer\Helper\Session\CurrentCustomer;
@@ -24,7 +24,7 @@ class Atc implements SectionSourceInterface
 {
 
     /**
-     * @var \Bss\FacebookPixels\Helper\Data
+     * @var \Bss\FacebookPixel\Helper\Data
      */
     protected $helper;
 
@@ -47,13 +47,13 @@ class Atc implements SectionSourceInterface
      * Atc constructor.
      * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Bss\FacebookPixels\Helper\Data $helper
+     * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param CurrentCustomer $currentCustomer
      */
     public function __construct(
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Customer\Model\Session $customerSession,
-        \Bss\FacebookPixels\Helper\Data $helper,
+        \Bss\FacebookPixel\Helper\Data $helper,
         CurrentCustomer $currentCustomer
     ) {
         $this->urlBuilder = $urlBuilder;

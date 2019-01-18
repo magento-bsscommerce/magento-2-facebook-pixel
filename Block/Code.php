@@ -10,15 +10,15 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixels
+ * @package   Bss_FacebookPixel
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
-namespace Bss\FacebookPixels\Block;
+namespace Bss\FacebookPixel\Block;
 /**
  * Class Code
- * @package Bss\FacebookPixels\Block
+ * @package Bss\FacebookPixel\Block
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Code extends \Magento\Framework\View\Element\Template
@@ -29,7 +29,7 @@ class Code extends \Magento\Framework\View\Element\Template
     protected $storeManager;
 
     /**
-     * @var \Bss\FacebookPixels\Helper\Data
+     * @var \Bss\FacebookPixel\Helper\Data
      */
     protected $helper;
 
@@ -102,7 +102,7 @@ class Code extends \Magento\Framework\View\Element\Template
     /**
      * Code constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Bss\FacebookPixels\Helper\Data $helper
+     * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Catalog\Helper\Data $catalogHelper
      * @param \Magento\Tax\Model\Config $taxConfig
@@ -111,7 +111,7 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Bss\FacebookPixels\Helper\Data $helper,
+        \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Catalog\Helper\Data $catalogHelper,
         \Magento\Tax\Model\Config $taxConfig,
@@ -363,7 +363,7 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @return \Bss\FacebookPixels\Helper\Data
+     * @return \Bss\FacebookPixel\Helper\Data
      */
     public function getHelper()
     {
@@ -371,7 +371,7 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @return \Bss\FacebookPixels\Model\Session
+     * @return \Bss\FacebookPixel\Model\Session
      */
     public function getSession()
     {

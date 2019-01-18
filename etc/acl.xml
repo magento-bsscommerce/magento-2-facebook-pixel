@@ -11,7 +11,7 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixels
+ * @package   Bss_FacebookPixel
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
@@ -24,7 +24,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Bss_FacebookPixels::config_system" title="Facebook Pixel" sortOrder="1" />
+                            <resource id="Bss_FacebookPixel::config_system" title="Facebook Pixel" sortOrder="1" />
                         </resource>
                     </resource>
                 </resource>

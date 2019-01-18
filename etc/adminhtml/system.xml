@@ -11,7 +11,7 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixels
+ * @package   Bss_FacebookPixel
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
@@ -25,7 +25,7 @@
     <section id="bss_facebook_pixel" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label><![CDATA[Facebook Pixel]]></label>
         <tab>bss</tab>
-        <resource>Bss_FacebookPixels::config_system</resource>
+        <resource>Bss_FacebookPixel::config_system</resource>
         <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label><![CDATA[General]]></label>
             <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -44,7 +44,7 @@
             <label><![CDATA[Event Tracking]]></label>
             <field id="disable_code" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Disable Pixel Code on]]></label>
-                <source_model>Bss\FacebookPixels\Model\Config\Source\Pages</source_model>
+                <source_model>Bss\FacebookPixel\Model\Config\Source\Pages</source_model>
             </field>
             <field id="product_view" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Product View]]></label>
