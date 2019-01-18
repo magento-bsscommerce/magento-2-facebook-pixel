@@ -97,8 +97,6 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     protected $checkoutSession;
 
-
-
     /**
      * Code constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context

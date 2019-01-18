@@ -67,7 +67,7 @@
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
             <field id="add_to_wishlist" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label><![CDATA[Add to wishlist]]></label>
+                <label><![CDATA[Add to Wish List]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
             <field id="registration" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
