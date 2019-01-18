@@ -419,6 +419,12 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     private function getProductData()
     {
+        if (!$this->helper->getConfig(
+            'bss_facebook_pixel/event_tracking/product_view',
+            $this->getStoreId()
+        )) {
+            return [];
+        }
         $currentProduct = $this->coreRegistry->registry('current_product');
 
         $data = [];
@@ -442,6 +448,12 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     private function getCategoryData()
     {
+        if (!$this->helper->getConfig(
+            'bss_facebook_pixel/event_tracking/category_view',
+            $this->getStoreId()
+        )) {
+            return [];
+        }
         $currentCategory = $this->coreRegistry->registry('current_category');
 
         $data = [];

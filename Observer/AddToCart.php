@@ -57,6 +57,7 @@ class AddToCart implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        $typeConfi = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
         if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart')) {
             return true;
         }
@@ -71,6 +72,9 @@ class AddToCart implements ObserverInterface {
         foreach ($items as $item) {
             if (!$item->getParentItem()) {
                 $product['value'] += $item->getProduct()->getFinalPrice() * $item->getQtyToAdd();
+            }
+            if ($item->getProduct()->getTypeId() == $typeConfi) {
+                continue;
             }
             $product['contents'][] = [
                 'id' => $item->getSku(),

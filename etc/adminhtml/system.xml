@@ -46,39 +46,39 @@
                 <label><![CDATA[Disable Pixel Code on]]></label>
                 <source_model>Bss\FacebookPixel\Model\Config\Source\Pages</source_model>
             </field>
-            <field id="product_view" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="product_view" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Product View]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="category_view" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="category_view" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Category View]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="add_to_cart" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="add_to_cart" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Add to cart]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="initiate_checkout" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="initiate_checkout" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Initiate Checkout]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="purchase" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="purchase" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Purchase]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="add_to_wishlist" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="add_to_wishlist" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Add to wishlist]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="registration" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="registration" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Registration]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="subscribe" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="subscribe" translate="label" type="select" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Subscribe]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="search" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="search" translate="label" type="select" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Search]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
