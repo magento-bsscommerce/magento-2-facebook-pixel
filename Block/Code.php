@@ -379,6 +379,7 @@ class Code extends \Magento\Framework\View\Element\Template
     /**
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.RequestAwareBlockMethod)
      */
     public function getFacebookPixelData()
     {
