@@ -10,110 +10,58 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixel
+ * @package   Bss_FacebookPixels
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
 // @codingStandardsIgnoreFile
 /**
- * @var $block \Bss\FacebookPixel\Block\Code
+ * @var $block \Bss\FacebookPixels\Block\Code
  */
-
+if ($block->checkDisable() == 1) {
+    return;
+}
+$helper = $block->getHelper();
+$session = $block->getSession();
 $data   = $block->getFacebookPixelData();
 $id     = $data['id'];
 $action = $data['full_action_name'];
-$listDisableCode = $block->listDisableCode() ?: [];
+$productData = $block->getProduct();
+$categoryData = $block->getCategory();
+$registration = $block->getRegistration();
+$AddToWishlist = $block->getAddToWishList();
+$AddToCart = $block->getAddToCart();
+$Subscribe = $block->getSubscribe();
+$InitiateCheckout = $block->getInitiateCheckout();
+$search = $block->getSearch();
+$orderData = $block->getOrder();
 
 ?>
-<!-- Facebook Pixel Code -->
-<script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
-        t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window,
-        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+<script type="text/x-magento-init">
+    {
+    "*":
+    {
+            "Bss_FacebookPixels/js/code": {
+                "id" : <?php echo $block->escapeHtml($id); ?>,
+                "action" : "<?php echo $data['full_action_name']; ?>",
+                "productData" : <?php echo $productData; ?>,
+                "categoryData" : <?php echo $categoryData; ?>,
+                "registration" : <?php echo $registration; ?>,
+                "addToWishList" : <?php echo $AddToWishlist; ?>,
+                "addToCart" : <?php echo $AddToCart; ?>,
+                "subscribe" : <?php echo $Subscribe; ?>,
+                "initiateCheckout" : <?php echo  $InitiateCheckout; ?>,
+                "search" : <?php echo $search; ?>,
+                "orderData" : <?php echo $orderData ?>
 
-    fbq('init', '<?php echo $block->escapeHtml($id) ?>');
-
-    <?php if ($action == 'catalog_product_view') : ?>
-    fbq('track', 'PageView');
-    <?php
-    $productData = $block->getProductData();
-    if ($productData !== null) : ?>
-    fbq('track', 'ViewContent', {
-        content_name: '<?php echo $block
-            ->escapeHtml($productData['content_name']) ?>',
-        content_ids: ['<?php echo $block
-            ->escapeHtml($productData['content_ids']) ?>'],
-        content_type: 'product',
-        value: <?php echo $block->escapeHtml($productData['value']) ?>,
-        currency: '<?php echo $block->escapeHtml($productData['currency']) ?>'
-    });
-    //Add Pixel Events to the button's click handler
-    if (typeof jQuery != 'undefined') {
-        jQuery('#product-addtocart-button').click(function() {
-            fbq('track', 'AddToCart', {
-                content_name: '<?php echo $block
-                    ->escapeHtml($productData['content_name']) ?>',
-                content_ids: ['<?php echo $block
-                    ->escapeHtml($productData['content_ids']) ?>'],
-                content_type: 'product',
-                value: <?php echo $block->escapeHtml($productData['value']) ?>,
-                currency: '<?php
-                    echo $block->escapeHtml($productData['currency']) ?>'
-            });
-        });
+            }
+        }
     }
-    <?php endif; ?>
-    <?php elseif ($action == 'catalogsearch_result_index' && !in_array('search_page', $listDisableCode)) : ?>
-    fbq('track', 'PageView');
-    fbq('track', 'Search');
-    <?php elseif ($action == 'catalogsearch_advanced_result' && !in_array('advanced_search_page', $listDisableCode)) : ?>
-    fbq('track', 'PageView');
-    fbq('track', 'Search');
-    <?php elseif ($action == 'customer_account_create' && !in_array('registration_page', $listDisableCode)) : ?>
-    fbq('track', 'PageView');
-    fbq('track', 'CompleteRegistration');
-    <?php elseif (($action == 'checkout_index_index'
-        || $action == 'onepagecheckout_index_index'
-        || $action == 'onestepcheckout_index_index'
-        || $action == 'opc_index_index') && !in_array('checkout_page', $listDisableCode)) : ?>
-    fbq('track', 'PageView');
-    fbq('track', 'InitiateCheckout');
-    <?php elseif (($action == 'checkout_onepage_success'
-        || $action == 'onepagecheckout_index_success') && !in_array('success_page', $listDisableCode) ) : ?>
-    fbq('track', 'PageView');
-    <?php
-    echo $block->getChildHtml(
-        'bss.facebook.pixel.success.purchase'
-    );
-    ?>
-    <?php elseif ($action == 'wishlist_index_index') : ?>
-    fbq('track', 'PageView');
-    fbq('track', 'AddToWishlist');
-    <?php elseif ($action == 'catalog_category_view') :?>
-    fbq('track', 'PageView');
-    <?php
-    $categoryData = $block->getCategoryData();
-    if ($categoryData !== null) : ?>
-    fbq('track', 'ViewContent', {
-        content_name: '<?php echo $block
-            ->escapeHtml($categoryData['content_name']) ?>',
-        content_ids: ['<?php echo $block
-            ->escapeHtml($categoryData['content_ids']) ?>'],
-        content_type: 'category',
-        currency: '<?php echo $block->escapeHtml($categoryData['currency']) ?>'
-    });
-    <?php endif; ?>
-    <?php elseif ($action == 'customer_account_index' && !in_array('account_page', $listDisableCode)) : ?>
-    fbq('track', 'PageView');
-    <?php elseif (!in_array('cms_page', $listDisableCode)) : ?>
-    fbq('track', 'PageView');
-    <?php endif; ?>
-
 </script>
+<!-- Facebook Pixel Code -->
+
+
 <noscript><img height="1" width="1" style="display:none" alt="Facebook Pixel"
                src="https://www.facebook.com/tr?id=<?php
                 echo $block->escapeHtml($id) ?>&ev=PageView&noscript=1"

@@ -10,106 +10,112 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixel
+ * @package   Bss_FacebookPixels
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
-namespace Bss\FacebookPixel\Block;
-
+namespace Bss\FacebookPixels\Block;
+/**
+ * Class Code
+ * @package Bss\FacebookPixels\Block
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class Code extends \Magento\Framework\View\Element\Template
 {
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    public $storeManager;
+    protected $storeManager;
 
     /**
-     * @var \Bss\FacebookPixel\Helper\Data
+     * @var \Bss\FacebookPixels\Helper\Data
      */
-    public $helper;
+    protected $helper;
 
     /**
      * @var \Magento\Framework\Registry
      */
-    public $coreRegistry;
+    protected $coreRegistry;
 
     /**
      * @var \Magento\Catalog\Helper\Data
      */
-    public $catalogHelper;
+    protected $catalogHelper;
 
     /**
      * Tax config model
      *
      * @var \Magento\Tax\Model\Config
      */
-    public $taxConfig;
+    protected $taxConfig;
 
     /**
      * Tax display flag
      *
      * @var null|int
      */
-    public $taxDisplayFlag = null;
+    protected $taxDisplayFlag = null;
 
     /**
      * Tax catalog flag
      *
      * @var null|int
      */
-    public $taxCatalogFlag = null;
+    protected $taxCatalogFlag = null;
 
     /**
      * Store object
      *
      * @var null|\Magento\Store\Model\Store
      */
-    public $store = null;
+    protected $store = null;
 
     /**
      * Store ID
      *
      * @var null|int
      */
-    public $storeId = null;
+    protected $storeId = null;
 
     /**
      * Base currency code
      *
      * @var null|string
      */
-    public $baseCurrencyCode = null;
+    protected $baseCurrencyCode = null;
 
     /**
      * Current currency code
      *
      * @var null|string
      */
-    public $currentCurrencyCode = null;
+    protected $currentCurrencyCode = null;
 
     /**
-     * @var Purchase
+     * @var \Magento\Checkout\Model\SessionFactory
      */
-    protected $purchase;
+    protected $checkoutSession;
+
+
 
     /**
      * Code constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Bss\FacebookPixel\Helper\Data $helper
+     * @param \Bss\FacebookPixels\Helper\Data $helper
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Catalog\Helper\Data $catalogHelper
      * @param \Magento\Tax\Model\Config $taxConfig
-     * @param Purchase $purchase
+     * @param \Magento\Checkout\Model\SessionFactory $checkoutSession
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Bss\FacebookPixel\Helper\Data $helper,
+        \Bss\FacebookPixels\Helper\Data $helper,
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Catalog\Helper\Data $catalogHelper,
         \Magento\Tax\Model\Config $taxConfig,
-        \Bss\FacebookPixel\Block\Purchase $purchase,
+        \Magento\Checkout\Model\SessionFactory $checkoutSession,
         array $data = []
     ) {
         $this->storeManager  = $context->getStoreManager();
@@ -117,16 +123,259 @@ class Code extends \Magento\Framework\View\Element\Template
         $this->coreRegistry  = $coreRegistry;
         $this->catalogHelper = $catalogHelper;
         $this->taxConfig     = $taxConfig;
-        $this->purchase      = $purchase;
+        $this->checkoutSession = $checkoutSession;
         parent::__construct($context, $data);
     }
 
     /**
-     * @return Purchase
+     * @return int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getPurchase()
+    public function checkDisable()
     {
-        return $this->purchase;
+        $data   = $this->getFacebookPixelData();
+        $action = $data['full_action_name'];
+        $listDisableCode = $this->listDisableCode();
+        if (($action == 'checkout_onepage_success'
+                || $action == 'onepagecheckout_index_success') && in_array('success_page', $listDisableCode)) {
+            return 1;
+        } elseif ($action == 'customer_account_index' && in_array('account_page', $listDisableCode)) {
+            return 1;
+        } elseif (($action == 'cms_index_index' || $action == 'cms_page_view')
+            && in_array('cms_page', $listDisableCode)) {
+            return 1;
+        } else {
+            return $this->checkDisableMore($action, $listDisableCode);
+        }
+    }
+
+    /**
+     * @param $action
+     * @param $listDisableCode
+     * @return int
+     */
+    private function checkDisableMore($action, $listDisableCode)
+    {
+        if (($action == 'checkout_index_index'
+                || $action == 'onepagecheckout_index_index'
+                || $action == 'onestepcheckout_index_index'
+                || $action == 'opc_index_index') && in_array('checkout_page', $listDisableCode)) {
+            return 1;
+        }
+        if ($action == 'catalogsearch_result_index' && in_array('search_page', $listDisableCode)) {
+            return 1;
+        }
+        return $this->checkDisableMore2($action, $listDisableCode);
+    }
+
+    /**
+     * @param $action
+     * @param $listDisableCode
+     * @return int
+     */
+    private function checkDisableMore2($action, $listDisableCode)
+    {
+        if ($action == 'catalogsearch_advanced_result' && in_array('advanced_search_page', $listDisableCode)) {
+            return 1;
+        }
+        if ($action == 'customer_account_create' && in_array('registration_page', $listDisableCode)) {
+            return 1;
+        }
+        return 2;
+    }
+    /**
+     * @return false|int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getProduct()
+    {
+        $productData = 404;
+        $data   = $this->getFacebookPixelData();
+        $action = $data['full_action_name'];
+        if ($action == 'catalog_product_view') {
+            if ($this->getProductData() !== null) {
+                $productData = json_encode($this->getProductData());
+            }
+        }
+        return $productData;
+    }
+
+    /**
+     * @return false|int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getCategory()
+    {
+        $categoryData = 404;
+        $data   = $this->getFacebookPixelData();
+        $action = $data['full_action_name'];
+        if ($action == 'catalog_category_view') {
+            if ($this->getCategoryData() !== null) {
+                $categoryData = json_encode($this->getCategoryData());
+            }
+        }
+        return $categoryData;
+    }
+
+    /**
+     * @return array|int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getOrder()
+    {
+        $orderData = 404;
+        $data   = $this->getFacebookPixelData();
+        $action = $data['full_action_name'];
+        if ($action == 'checkout_onepage_success'
+            || $action == 'onepagecheckout_index_success'
+            || $action == 'multishipping_checkout_success') {
+            $orderData = $this->getOrderData();
+        }
+        return $orderData;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getRegistration()
+    {
+        $registration = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration')
+            && $this->getSession()->hasRegister()) {
+            $registration = $this->helper->getPixelHtml('CompleteRegistration', $this->getSession()->getRegister());
+        }
+        return $registration;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getAddToWishList()
+    {
+        $add_to_wishlist = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist')
+            && $this->getSession()->hasAddToWishlist()) {
+            $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $this->getSession()->getAddToWishlist());
+        }
+        return $add_to_wishlist;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getAddToCart()
+    {
+        $add_to_cart = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart')
+            && $this->getSession()->hasAddToCart()) {
+            $add_to_cart = $this->helper->getPixelHtml('AddToCart', $this->getSession()->getAddToCart());
+        }
+        return $add_to_cart;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getSubscribe()
+    {
+        $subscribe = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe')
+            && $this->getSession()->hasAddSubscribe()) {
+            $subscribe = $this->helper->getPixelHtml('Subscribe', $this->getSession()->getAddSubscribe());
+        }
+        return $subscribe;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getInitiateCheckout()
+    {
+        $initiateCheckout = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')
+            && $this->getSession()->hasInitiateCheckout()) {
+            $initiateCheckout = $this->helper->getPixelHtml(
+                'InitiateCheckout',
+                $this->getSession()->getInitiateCheckout()
+            );
+        }
+        return $initiateCheckout;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getSearch()
+    {
+        $subscribe = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search')
+            && $this->getSession()->hasSearch()) {
+            $subscribe = $this->helper->getPixelHtml('Search', $this->getSession()->getSearch());
+        }
+        return $subscribe;
+    }
+
+    /**
+     * Returns data needed for purchase tracking.
+     *
+     * @return array|int
+     */
+    public function getOrderData()
+    {
+        $order = $this->checkoutSession->create()->getLastRealOrder();
+        $orderId = $order->getIncrementId();
+
+        if ($orderId) {
+            $product = [
+                'content_ids' => [],
+                'contents' => [],
+                'value' => "",
+                'currency' => ""
+            ];
+
+            foreach ($order->getAllVisibleItems() as $item) {
+                $product['contents'][] = [
+                    'id' => $item->getSku(),
+                    'name' => $item->getName(),
+                    'quantity' => $item->getQtyOrdered(),
+                    'price' => $item->getPrice()
+                ];
+                $product['content_ids'][] = $item->getSku();
+            }
+            $data = [
+                'content_ids' => $product['content_ids'],
+                'contents' => $product['contents'],
+                'content_type' => 'product',
+                'value' => number_format(
+                    $order->getGrandTotal(),
+                    2,
+                    '.',
+                    ''
+                ),
+                'currency' => $order->getOrderCurrencyCode()
+            ];
+
+
+            return json_encode($data);
+        } else {
+            return 404;
+        }
+    }
+
+    /**
+     * @return \Bss\FacebookPixels\Helper\Data
+     */
+    public function getHelper()
+    {
+        return $this->helper;
+    }
+
+    /**
+     * @return \Bss\FacebookPixels\Model\Session
+     */
+    public function getSession()
+    {
+        return $this->getHelper()->getSession();
     }
 
     /**
@@ -147,21 +396,28 @@ class Code extends \Magento\Framework\View\Element\Template
         return $data;
     }
 
-    public function listDisableCode()
+    /**
+     * @return array|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function listDisableCode()
     {
         $list = $this->helper->getConfig(
             'bss_facebook_pixel/event_tracking/disable_code',
             $this->getStoreId()
         );
-        $list = explode(',', $list);
-        return $list;
+        if ($list) {
+            return explode(',', $list);
+        } else {
+            return [];
+        }
     }
 
     /**
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getProductData()
+    private function getProductData()
     {
         $currentProduct = $this->coreRegistry->registry('current_product');
 
@@ -184,7 +440,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getCategoryData()
+    private function getCategoryData()
     {
         $currentCategory = $this->coreRegistry->registry('current_category');
 
@@ -265,7 +521,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @return int
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getDisplayTaxFlag()
+    private function getDisplayTaxFlag()
     {
         if ($this->taxDisplayFlag === null) {
             // Tax Display
@@ -306,12 +562,11 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Returns product price.
-     *
-     * @param \Magento\Catalog\Model\Product $product
-     * @return string
+     * @param $product
+     * @return mixed|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getProductPrice($product)
+    private function getProductPrice($product)
     {
         switch ($product->getTypeId()) {
             case 'bundle':
@@ -337,7 +592,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getBundleProductPrice($product)
+    private function getBundleProductPrice($product)
     {
         $includeTax = (bool) $this->getDisplayTaxFlag();
 
@@ -353,12 +608,11 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Returns configurable product price.
-     *
-     * @param \Magento\Catalog\Model\Product $product
+     * @param $product
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getConfigurableProductPrice($product)
+    private function getConfigurableProductPrice($product)
     {
         if ($product->getFinalPrice() === 0) {
             $simpleCollection = $product->getTypeInstance()
@@ -375,12 +629,11 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Returns grouped product price.
-     *
-     * @param \Magento\Catalog\Model\Product $product
-     * @return string
+     * @param $product
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getGroupedProductPrice($product)
+    private function getGroupedProductPrice($product)
     {
         $assocProducts = $product->getTypeInstance(true)
             ->getAssociatedProductCollection($product)
@@ -404,7 +657,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getFinalPrice($product, $price = null)
+    private function getFinalPrice($product, $price = null)
     {
        $price = $this->resultPriceFinal($product, $price);
 
@@ -453,6 +706,12 @@ class Code extends \Magento\Framework\View\Element\Template
         return $price;
     }
 
+    /**
+     * @param $product
+     * @param $price
+     * @return float
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function resultPriceFinal($product, $price)
     {
         if ($price === null) {
@@ -484,7 +743,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @param string $currencyCode
      * @return string
      */
-    public function formatPrice($price, $currencyCode = '')
+    private function formatPrice($price, $currencyCode = '')
     {
         $formatedPrice = number_format($price, 2, '.', '');
 

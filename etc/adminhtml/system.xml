@@ -11,7 +11,7 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixel
+ * @package   Bss_FacebookPixels
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
@@ -25,10 +25,10 @@
     <section id="bss_facebook_pixel" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label><![CDATA[Facebook Pixel]]></label>
         <tab>bss</tab>
-        <resource>Bss_CheckoutCustomField::customfield_config</resource>
+        <resource>Bss_FacebookPixels::config_system</resource>
         <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label><![CDATA[General]]></label>
-            <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Enable Facebook Pixel]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <comment><![CDATA[Version 1.0.0]]></comment>
@@ -37,14 +37,14 @@
                 <label><![CDATA[Pixel ID]]></label>
                 <validate>required-entry validate-number</validate>
                 <comment><![CDATA[Input Your Facebook Pixel ID]]></comment>
-                <depends><field id="*/general/enable">1</field></depends>
+                <depends><field id="*/general/active">1</field></depends>
             </field>
         </group>
         <group id="event_tracking" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label><![CDATA[Event Tracking]]></label>
             <field id="disable_code" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Disable Pixel Code on]]></label>
-                <source_model>Bss\FacebookPixel\Model\Config\Source\Pages</source_model>
+                <source_model>Bss\FacebookPixels\Model\Config\Source\Pages</source_model>
             </field>
             <field id="product_view" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Product View]]></label>

@@ -10,12 +10,12 @@
  * http://bsscommerce.com/Bss-Commerce-License.txt
  *
  * @category  BSS
- * @package   Bss_FacebookPixel
+ * @package   Bss_FacebookPixels
  * @author    Extension Team
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
-namespace Bss\FacebookPixel\Model\Config\Source;
+namespace Bss\FacebookPixels\Model\Config\Source;
 
 class Pages implements \Magento\Framework\Option\ArrayInterface
 {
@@ -25,6 +25,7 @@ class Pages implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
+            ['value' => 'no', 'label' => 'Not Select'],
             ['value' => 'cms_page', 'label' => 'Cms Page'],
             ['value' => 'account_page', 'label' => 'Account Page'],
             ['value' => 'registration_page', 'label' => 'Registration Page'],
