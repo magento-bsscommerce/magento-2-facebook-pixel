@@ -38,6 +38,16 @@ class InitiateCheckout implements ObserverInterface {
     protected $fbPixelHelper;
 
     /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $request;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * InitiateCheckout constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -46,11 +56,15 @@ class InitiateCheckout implements ObserverInterface {
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Bss\FacebookPixel\Helper\Data $helper
+        \Bss\FacebookPixel\Helper\Data $helper,
+        \Magento\Framework\App\RequestInterface $request,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelHelper         = $helper;
+        $this->request = $request;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -61,7 +75,22 @@ class InitiateCheckout implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')) {
+        $listDisable = $this->fbPixelHelper->listPageDisable();
+        $arrCheckout = [
+            'checkout_index_index',
+            'onepagecheckout_index_index',
+            'onestepcheckout_index_index',
+            'opc_index_index'
+        ];
+        $actionName  = $this->request->getFullActionName();
+        if (in_array($actionName, $arrCheckout) && in_array('checkout_page', $listDisable)) {
+            return true;
+        }
+        if ($this->fbPixelSession->getActionPage()) {
+            return true;
+        }
+        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout',
+            $this->storeManager->getStore()->getId())) {
             return true;
         }
         if (empty($this->checkoutSession->getQuote()->getAllVisibleItems())) {
@@ -80,7 +109,7 @@ class InitiateCheckout implements ObserverInterface {
                 'id' => $item->getSku(),
                 'name' => $item->getName(),
                 'quantity' => $item->getQty(),
-                'price' => $item->getPrice()
+                'item_price' => $item->getPrice()
             ];
             $product['content_ids'][] = $item->getSku();
         }

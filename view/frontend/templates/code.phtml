@@ -19,7 +19,7 @@
 /**
  * @var $block \Bss\FacebookPixel\Block\Code
  */
-if ($block->checkDisable() == 1) {
+if ($block->checkDisable()) {
     return;
 }
 $helper = $block->getHelper();

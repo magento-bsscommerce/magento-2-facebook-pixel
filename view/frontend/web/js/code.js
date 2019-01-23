@@ -106,6 +106,7 @@ define([
                 content_type: 'product',
                 contents: orderData.contents,
                 value: orderData.value,
+                num_items : orderData.num_items,
                 currency: orderData.currency
             });
         }

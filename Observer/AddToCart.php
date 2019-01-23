@@ -35,19 +35,27 @@ class AddToCart implements ObserverInterface {
     protected $helper;
 
     /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * AddToCart constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Bss\FacebookPixel\Helper\Data $helper
+        \Bss\FacebookPixel\Helper\Data $helper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->checkoutSession = $checkoutSession;
         $this->helper        = $helper;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -57,8 +65,12 @@ class AddToCart implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        if ($this->fbPixelSession->getActionPage()) {
+            return true;
+        }
         $typeConfi = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart')) {
+        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart',
+            $this->storeManager->getStore()->getId())) {
             return true;
         }
         $items = $observer->getItems();
@@ -80,7 +92,7 @@ class AddToCart implements ObserverInterface {
                 'id' => $item->getSku(),
                 'name' => $item->getName(),
                 'quantity' => $item->getQtyToAdd(),
-                'price' => $item->getProduct()->getFinalPrice()
+                'item_price' => $item->getProduct()->getFinalPrice()
             ];
             $product['content_ids'][] = $item->getSku();
         }

@@ -98,6 +98,11 @@ class Code extends \Magento\Framework\View\Element\Template
     protected $checkoutSession;
 
     /**
+     * @var \Bss\FacebookPixel\Model\Session
+     */
+    protected $fbPixelSession;
+
+    /**
      * Code constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Bss\FacebookPixel\Helper\Data $helper
@@ -136,13 +141,17 @@ class Code extends \Magento\Framework\View\Element\Template
         $listDisableCode = $this->listDisableCode();
         if (($action == 'checkout_onepage_success'
                 || $action == 'onepagecheckout_index_success') && in_array('success_page', $listDisableCode)) {
-            return 1;
+            $this->getSession()->setActionPage(true);
+            return true;
         } elseif ($action == 'customer_account_index' && in_array('account_page', $listDisableCode)) {
-            return 1;
+            $this->getSession()->setActionPage(true);
+            return true;
         } elseif (($action == 'cms_index_index' || $action == 'cms_page_view')
             && in_array('cms_page', $listDisableCode)) {
-            return 1;
+            $this->getSession()->setActionPage(true);
+            return true;
         } else {
+            $this->getSession()->setActionPage($this->checkDisableMore($action, $listDisableCode));
             return $this->checkDisableMore($action, $listDisableCode);
         }
     }
@@ -158,10 +167,10 @@ class Code extends \Magento\Framework\View\Element\Template
                 || $action == 'onepagecheckout_index_index'
                 || $action == 'onestepcheckout_index_index'
                 || $action == 'opc_index_index') && in_array('checkout_page', $listDisableCode)) {
-            return 1;
+            return true;
         }
         if ($action == 'catalogsearch_result_index' && in_array('search_page', $listDisableCode)) {
-            return 1;
+            return true;
         }
         return $this->checkDisableMore2($action, $listDisableCode);
     }
@@ -173,13 +182,14 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     private function checkDisableMore2($action, $listDisableCode)
     {
-        if ($action == 'catalogsearch_advanced_result' && in_array('advanced_search_page', $listDisableCode)) {
-            return 1;
+        if (($action == 'catalogsearch_advanced_result'
+            || $action == 'catalogsearch_advanced_index') && in_array('advanced_search_page', $listDisableCode)) {
+            return true;
         }
         if ($action == 'customer_account_create' && in_array('registration_page', $listDisableCode)) {
-            return 1;
+            return true;
         }
-        return 2;
+        return false;
     }
     /**
      * @return false|int|string
@@ -234,11 +244,12 @@ class Code extends \Magento\Framework\View\Element\Template
 
     /**
      * @return int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getRegistration()
     {
         $registration = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration')
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration', $this->getStoreId())
             && $this->getSession()->hasRegister()) {
             $registration = $this->helper->getPixelHtml('CompleteRegistration', $this->getSession()->getRegister());
         }
@@ -247,11 +258,12 @@ class Code extends \Magento\Framework\View\Element\Template
 
     /**
      * @return int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getAddToWishList()
     {
         $add_to_wishlist = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist')
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist', $this->getStoreId())
             && $this->getSession()->hasAddToWishlist()) {
             $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $this->getSession()->getAddToWishlist());
         }
@@ -260,11 +272,12 @@ class Code extends \Magento\Framework\View\Element\Template
 
     /**
      * @return int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getAddToCart()
     {
         $add_to_cart = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart')
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart', $this->getStoreId())
             && $this->getSession()->hasAddToCart()) {
             $add_to_cart = $this->helper->getPixelHtml('AddToCart', $this->getSession()->getAddToCart());
         }
@@ -273,11 +286,12 @@ class Code extends \Magento\Framework\View\Element\Template
 
     /**
      * @return int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getSubscribe()
     {
         $subscribe = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe')
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe', $this->getStoreId())
             && $this->getSession()->hasAddSubscribe()) {
             $subscribe = $this->helper->getPixelHtml('Subscribe', $this->getSession()->getAddSubscribe());
         }
@@ -286,11 +300,12 @@ class Code extends \Magento\Framework\View\Element\Template
 
     /**
      * @return int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getInitiateCheckout()
     {
         $initiateCheckout = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout', $this->getStoreId())
             && $this->getSession()->hasInitiateCheckout()) {
             $initiateCheckout = $this->helper->getPixelHtml(
                 'InitiateCheckout',
@@ -302,11 +317,12 @@ class Code extends \Magento\Framework\View\Element\Template
 
     /**
      * @return int|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getSearch()
     {
         $subscribe = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search')
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search', $this->getStoreId())
             && $this->getSession()->hasSearch()) {
             $subscribe = $this->helper->getPixelHtml('Search', $this->getSession()->getSearch());
         }
@@ -331,14 +347,16 @@ class Code extends \Magento\Framework\View\Element\Template
                 'currency' => ""
             ];
 
+            $num_item = 0;
             foreach ($order->getAllVisibleItems() as $item) {
                 $product['contents'][] = [
                     'id' => $item->getSku(),
                     'name' => $item->getName(),
-                    'quantity' => $item->getQtyOrdered(),
-                    'price' => $item->getPrice()
+                    'quantity' => (int)$item->getQtyOrdered(),
+                    'item_price' => $item->getPrice()
                 ];
                 $product['content_ids'][] = $item->getSku();
+                $num_item += round($item->getQtyOrdered());
             }
             $data = [
                 'content_ids' => $product['content_ids'],
@@ -350,6 +368,7 @@ class Code extends \Magento\Framework\View\Element\Template
                     '.',
                     ''
                 ),
+                'num_items' => $num_item,
                 'currency' => $order->getOrderCurrencyCode()
             ];
 
@@ -402,7 +421,7 @@ class Code extends \Magento\Framework\View\Element\Template
     private function listDisableCode()
     {
         $list = $this->helper->getConfig(
-            'bss_facebook_pixel/event_tracking/disable_code',
+            'bss_facebook_pixel/general/disable_code',
             $this->getStoreId()
         );
         if ($list) {

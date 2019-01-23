@@ -29,19 +29,27 @@ class Register implements ObserverInterface {
     /**
      * @var \Bss\FacebookPixel\Helper\Data
      */
-    protected $helper;
+    protected $fbPixelHelper;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
 
     /**
      * Register constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Bss\FacebookPixel\Helper\Data $helper
+        \Bss\FacebookPixel\Helper\Data $helper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->fbPixelSession = $fbPixelSession;
-        $this->helper        = $helper;
+        $this->fbPixelHelper        = $helper;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -51,8 +59,15 @@ class Register implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        if ($this->fbPixelSession->getActionPage()) {
+            return true;
+        }
         $customer = $observer->getEvent()->getCustomer();
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/registration') || !$customer) {
+        if (
+            !$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/registration',
+                $this->storeManager->getStore()->getId()) ||
+            !$customer
+        ) {
             return true;
         }
         $data = [

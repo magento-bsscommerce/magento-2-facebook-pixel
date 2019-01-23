@@ -33,19 +33,22 @@
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <comment><![CDATA[Version 1.0.0]]></comment>
             </field>
-            <field id="pixel_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="pixel_id" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Pixel ID]]></label>
                 <validate>required-entry validate-number</validate>
                 <comment><![CDATA[Input Your Facebook Pixel ID]]></comment>
                 <depends><field id="*/general/active">1</field></depends>
             </field>
+            <field id="disable_code" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label><![CDATA[Disable Pixel Code on]]></label>
+                <source_model>Bss\FacebookPixel\Model\Config\Source\Pages</source_model>
+                <comment><![CDATA[Select pages will disable code pixel]]></comment>
+                <depends><field id="*/general/active">1</field></depends>
+                <can_be_empty>1</can_be_empty>
+            </field>
         </group>
         <group id="event_tracking" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label><![CDATA[Event Tracking]]></label>
-            <field id="disable_code" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label><![CDATA[Disable Pixel Code on]]></label>
-                <source_model>Bss\FacebookPixel\Model\Config\Source\Pages</source_model>
-            </field>
             <field id="product_view" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Product View]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

@@ -25,7 +25,6 @@ class Pages implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => 'no', 'label' => 'Not Select'],
             ['value' => 'cms_page', 'label' => 'Cms Page'],
             ['value' => 'account_page', 'label' => 'Account Page'],
             ['value' => 'registration_page', 'label' => 'Registration Page'],

@@ -199,4 +199,35 @@ class Session extends \Magento\Framework\Session\SessionManager
         }
         return null;
     }
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setActionPage($data)
+    {
+        $this->setData('bss_action_page', $data);
+        return $this;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getActionPage()
+    {
+        if ($this->hasActionPage()) {
+            $data = $this->getData('bss_action_page');
+            $this->unsetData('bss_action_page');
+            return $data;
+        }
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActionPage()
+    {
+        return $this->hasData('bss_action_page');
+    }
 }

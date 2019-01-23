@@ -22,12 +22,31 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    public $scopeConfig;
+    protected $scopeConfig;
 
     /**
      * @var \Magento\Framework\Module\ModuleListInterface
      */
-    public $moduleList;
+    protected $moduleList;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * Store object
+     *
+     * @var null|\Magento\Store\Model\Store
+     */
+    protected $store = null;
+
+    /**
+     * Store ID
+     *
+     * @var null|int
+     */
+    protected $storeId = null;
 
     /**
      * Constructor
@@ -47,6 +66,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->fbPixelSession = $fbPixelSession;
 
         parent::__construct($context);
+    }
+
+    public function listPageDisable()
+    {
+        $list = $this->getConfig(
+            'bss_facebook_pixel/general/disable_code',
+            $this->storeManager->getStore()->getId()
+        );
+        if ($list) {
+            return explode(',', $list);
+        } else {
+            return [];
+        }
     }
 
     /**

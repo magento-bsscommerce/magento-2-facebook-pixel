@@ -39,22 +39,30 @@ class Search implements ObserverInterface {
     protected $request;
 
     /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * Search constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Search\Helper\Data $searchHelper
      * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Search\Helper\Data $searchHelper,
-        \Magento\Framework\App\RequestInterface $request
+        \Magento\Framework\App\RequestInterface $request,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->fbPixelHelper         = $helper;
         $this->searchHelper = $searchHelper;
         $this->request = $request;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -62,9 +70,14 @@ class Search implements ObserverInterface {
      *
      * @return boolean
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+
+        if ($this->fbPixelSession->getActionPage()) {
+            return true;
+        }
         $text = $this->searchHelper->getEscapedQueryText();
         if (!$text) {
             $text = $this->request->getParams();
@@ -72,7 +85,8 @@ class Search implements ObserverInterface {
                 $text[$key] = $value;
             }
         }
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/search') || !$text) {
+        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/search',
+                $this->storeManager->getStore()->getId()) || !$text) {
             return true;
         }
 
