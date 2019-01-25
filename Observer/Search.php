@@ -75,7 +75,19 @@ class Search implements ObserverInterface {
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $session = $this->fbPixelSession->create();
-
+        $listDisable = $this->fbPixelHelper->listPageDisable();
+        $arrCheckout = [
+            'catalogsearch_advanced_result',
+            'catalogsearch_result_index',
+            'catalogsearch_advanced_index'
+        ];
+        $actionName  = $this->request->getFullActionName();
+        if (in_array($actionName, $arrCheckout) && in_array('search_page', $listDisable)) {
+            return true;
+        }
+        if (in_array($actionName, $arrCheckout) && in_array('advanced_search_page', $listDisable)) {
+            return true;
+        }
         if ($session->getActionPage()) {
             return true;
         }
