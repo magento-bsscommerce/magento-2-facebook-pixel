@@ -19,11 +19,11 @@ namespace Bss\FacebookPixel\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class InitiateCheckout implements ObserverInterface {
-
+class InitiateCheckout implements ObserverInterface
+{
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
@@ -49,22 +49,24 @@ class InitiateCheckout implements ObserverInterface {
 
     /**
      * InitiateCheckout constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Framework\App\RequestInterface $request,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
     ) {
-        $this->fbPixelSession = $fbPixelSession;
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelHelper         = $helper;
         $this->request = $request;
         $this->storeManager = $storeManager;
+        $this->fbPixelSession = $fbPixelSession;
     }
 
     /**
@@ -75,6 +77,7 @@ class InitiateCheckout implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        $session = $this->fbPixelSession->create();
         $listDisable = $this->fbPixelHelper->listPageDisable();
         $arrCheckout = [
             'checkout_index_index',
@@ -86,7 +89,7 @@ class InitiateCheckout implements ObserverInterface {
         if (in_array($actionName, $arrCheckout) && in_array('checkout_page', $listDisable)) {
             return true;
         }
-        if ($this->fbPixelSession->getActionPage()) {
+        if ($session->getActionPage()) {
             return true;
         }
         if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout',
@@ -120,7 +123,7 @@ class InitiateCheckout implements ObserverInterface {
             'value' => $this->checkoutSession->getQuote()->getGrandTotal(),
             'currency' => $this->fbPixelHelper->getCurrencyCode(),
         ];
-        $this->fbPixelSession->setInitiateCheckout($data);
+        $session->setInitiateCheckout($data);
 
         return true;
     }

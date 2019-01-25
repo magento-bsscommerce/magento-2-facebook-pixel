@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class Search implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
     /**
@@ -45,18 +45,18 @@ class Search implements ObserverInterface {
 
     /**
      * Search constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Search\Helper\Data $searchHelper
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Search\Helper\Data $searchHelper,
         \Magento\Framework\App\RequestInterface $request,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->fbPixelHelper         = $helper;
@@ -74,8 +74,9 @@ class Search implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        $session = $this->fbPixelSession->create();
 
-        if ($this->fbPixelSession->getActionPage()) {
+        if ($session->getActionPage()) {
             return true;
         }
         $text = $this->searchHelper->getEscapedQueryText();
@@ -93,7 +94,7 @@ class Search implements ObserverInterface {
         $data = [
             'search_string' => $text
         ];
-        $this->fbPixelSession->setSearch($data);
+        $session->setSearch($data);
 
         return true;
     }

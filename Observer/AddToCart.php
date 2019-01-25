@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class AddToCart implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
     /**
@@ -41,13 +41,13 @@ class AddToCart implements ObserverInterface {
 
     /**
      * AddToCart constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -65,7 +65,8 @@ class AddToCart implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if ($this->fbPixelSession->getActionPage()) {
+        $session = $this->fbPixelSession->create();
+        if ($session->getActionPage()) {
             return true;
         }
         $typeConfi = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
@@ -105,7 +106,7 @@ class AddToCart implements ObserverInterface {
             'currency' => $this->helper->getCurrencyCode(),
         ];
 
-        $this->fbPixelSession->setAddToCart($data);
+        $session->setAddToCart($data);
 
         return true;
     }

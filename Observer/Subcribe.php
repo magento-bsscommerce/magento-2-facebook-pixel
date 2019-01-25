@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class Subcribe implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
     /**
@@ -41,13 +41,13 @@ class Subcribe implements ObserverInterface {
 
     /**
      * Subcribe constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -66,7 +66,8 @@ class Subcribe implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if ($this->fbPixelSession->getActionPage()) {
+        $session = $this->fbPixelSession->create();
+        if ($session->getActionPage()) {
             return true;
         }
         $email = $observer->getEvent()->getSubscriber()->getSubscriberEmail();
@@ -80,7 +81,7 @@ class Subcribe implements ObserverInterface {
             'id' => $subscribeId
         ];
 
-        $this->fbPixelSession->setAddSubscribe($data);
+        $session->setAddSubscribe($data);
 
         return true;
     }

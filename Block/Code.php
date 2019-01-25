@@ -98,7 +98,7 @@ class Code extends \Magento\Framework\View\Element\Template
     protected $checkoutSession;
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
@@ -110,6 +110,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @param \Magento\Catalog\Helper\Data $catalogHelper
      * @param \Magento\Tax\Model\Config $taxConfig
      * @param \Magento\Checkout\Model\SessionFactory $checkoutSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param array $data
      */
     public function __construct(
@@ -119,6 +120,7 @@ class Code extends \Magento\Framework\View\Element\Template
         \Magento\Catalog\Helper\Data $catalogHelper,
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Checkout\Model\SessionFactory $checkoutSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         array $data = []
     ) {
         $this->storeManager  = $context->getStoreManager();
@@ -127,6 +129,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $this->catalogHelper = $catalogHelper;
         $this->taxConfig     = $taxConfig;
         $this->checkoutSession = $checkoutSession;
+        $this->fbPixelSession = $fbPixelSession;
         parent::__construct($context, $data);
     }
 
@@ -136,22 +139,23 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function checkDisable()
     {
+        $session = $this->fbPixelSession->create();
         $data   = $this->getFacebookPixelData();
         $action = $data['full_action_name'];
         $listDisableCode = $this->listDisableCode();
         if (($action == 'checkout_onepage_success'
                 || $action == 'onepagecheckout_index_success') && in_array('success_page', $listDisableCode)) {
-            $this->getSession()->setActionPage(true);
+            $session->setActionPage(true);
             return true;
         } elseif ($action == 'customer_account_index' && in_array('account_page', $listDisableCode)) {
-            $this->getSession()->setActionPage(true);
+            $session->setActionPage(true);
             return true;
         } elseif (($action == 'cms_index_index' || $action == 'cms_page_view')
             && in_array('cms_page', $listDisableCode)) {
-            $this->getSession()->setActionPage(true);
+            $session->setActionPage(true);
             return true;
         } else {
-            $this->getSession()->setActionPage($this->checkDisableMore($action, $listDisableCode));
+            $session->setActionPage($this->checkDisableMore($action, $listDisableCode));
             return $this->checkDisableMore($action, $listDisableCode);
         }
     }
@@ -248,10 +252,11 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getRegistration()
     {
+        $session = $this->fbPixelSession->create();
         $registration = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration', $this->getStoreId())
-            && $this->getSession()->hasRegister()) {
-            $registration = $this->helper->getPixelHtml('CompleteRegistration', $this->getSession()->getRegister());
+            && $session->hasRegister()) {
+            $registration = $this->helper->getPixelHtml('CompleteRegistration', $session->getRegister());
         }
         return $registration;
     }
@@ -262,10 +267,11 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getAddToWishList()
     {
+        $session = $this->fbPixelSession->create();
         $add_to_wishlist = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist', $this->getStoreId())
-            && $this->getSession()->hasAddToWishlist()) {
-            $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $this->getSession()->getAddToWishlist());
+            && $session->hasAddToWishlist()) {
+            $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $session->getAddToWishlist());
         }
         return $add_to_wishlist;
     }
@@ -276,10 +282,11 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getAddToCart()
     {
+        $session = $this->fbPixelSession->create();
         $add_to_cart = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart', $this->getStoreId())
-            && $this->getSession()->hasAddToCart()) {
-            $add_to_cart = $this->helper->getPixelHtml('AddToCart', $this->getSession()->getAddToCart());
+            && $session->hasAddToCart()) {
+            $add_to_cart = $this->helper->getPixelHtml('AddToCart', $session->getAddToCart());
         }
         return $add_to_cart;
     }
@@ -290,10 +297,11 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getSubscribe()
     {
+        $session = $this->fbPixelSession->create();
         $subscribe = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe', $this->getStoreId())
-            && $this->getSession()->hasAddSubscribe()) {
-            $subscribe = $this->helper->getPixelHtml('Subscribe', $this->getSession()->getAddSubscribe());
+            && $session->hasAddSubscribe()) {
+            $subscribe = $this->helper->getPixelHtml('Subscribe', $session->getAddSubscribe());
         }
         return $subscribe;
     }
@@ -304,12 +312,13 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getInitiateCheckout()
     {
+        $session = $this->fbPixelSession->create();
         $initiateCheckout = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout', $this->getStoreId())
-            && $this->getSession()->hasInitiateCheckout()) {
+            && $session->hasInitiateCheckout()) {
             $initiateCheckout = $this->helper->getPixelHtml(
                 'InitiateCheckout',
-                $this->getSession()->getInitiateCheckout()
+                $session->getInitiateCheckout()
             );
         }
         return $initiateCheckout;
@@ -321,10 +330,11 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function getSearch()
     {
+        $session = $this->fbPixelSession->create();
         $subscribe = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search', $this->getStoreId())
-            && $this->getSession()->hasSearch()) {
-            $subscribe = $this->helper->getPixelHtml('Search', $this->getSession()->getSearch());
+            && $session->hasSearch()) {
+            $subscribe = $this->helper->getPixelHtml('Search', $session->getSearch());
         }
         return $subscribe;
     }

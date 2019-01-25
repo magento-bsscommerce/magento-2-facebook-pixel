@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class Register implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
@@ -38,12 +38,12 @@ class Register implements ObserverInterface {
 
     /**
      * Register constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
@@ -59,7 +59,8 @@ class Register implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if ($this->fbPixelSession->getActionPage()) {
+        $session = $this->fbPixelSession->create();
+        if ($session->getActionPage()) {
             return true;
         }
         $customer = $observer->getEvent()->getCustomer();
@@ -74,7 +75,7 @@ class Register implements ObserverInterface {
             'customer_id' => $customer->getId()
         ];
 
-        $this->fbPixelSession->setRegister($data);
+        $session->setRegister($data);
 
         return true;
     }

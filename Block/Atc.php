@@ -44,22 +44,30 @@ class Atc implements SectionSourceInterface
     protected $currentCustomer;
 
     /**
+     * @var \Bss\FacebookPixel\Model\SessionFactory
+     */
+    protected $fbPixelSession;
+
+    /**
      * Atc constructor.
      * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param CurrentCustomer $currentCustomer
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      */
     public function __construct(
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Customer\Model\Session $customerSession,
         \Bss\FacebookPixel\Helper\Data $helper,
-        CurrentCustomer $currentCustomer
+        CurrentCustomer $currentCustomer,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->customerSession = $customerSession;
         $this->helper = $helper;
         $this->currentCustomer = $currentCustomer;
+        $this->fbPixelSession = $fbPixelSession;
     }
 
     /**
@@ -69,21 +77,19 @@ class Atc implements SectionSourceInterface
      */
     public function getSectionData()
     {
-
-
+        $session = $this->fbPixelSession->create();
         $data = [
             'events' => []
         ];
 
-        if ($this->helper->getSession()->hasAddToCart()) {
+        if ($session->hasAddToCart()) {
             // Get the add-to-cart information since it's unique to the user
             // but might be displayed on a cached page
             $data['events'][] = [
                 'eventName' => 'AddToCart',
-                'eventAdditional' => $this->helper->getSession()->getAddToCart()
+                'eventAdditional' => $session->getAddToCart()
             ];
         }
-
         return $data;
     }
 }
