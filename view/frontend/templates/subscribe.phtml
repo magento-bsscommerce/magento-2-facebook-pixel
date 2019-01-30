@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * BSS Commerce Co.
  *
@@ -16,13 +15,10 @@
  * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
-    <action name="checkout/cart/add">
-        <section name="bss-fbpixel-atc"/>
-    </action>
-    <action name="newsletter/subscriber/new">
-        <section name="bss-fbpixel-subscribe"/>
-    </action>
-</config>
+?>
+<div data-role="bss-fbpixel-subscribe" style="display:none;">
+
+</div>
+<script type="text/x-magento-init">
+    {"[data-role='bss-fbpixel-subscribe']": {"Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>}}
+</script>

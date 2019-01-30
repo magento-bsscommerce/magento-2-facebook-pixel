@@ -23,7 +23,7 @@ class InitiateCheckout implements ObserverInterface
 {
 
     /**
-     * @var \Bss\FacebookPixel\Model\SessionFactory
+     * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
 
@@ -53,14 +53,14 @@ class InitiateCheckout implements ObserverInterface
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      */
     public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+        \Bss\FacebookPixel\Model\Session $fbPixelSession
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelHelper         = $helper;
@@ -77,7 +77,6 @@ class InitiateCheckout implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $session = $this->fbPixelSession->create();
         $listDisable = $this->fbPixelHelper->listPageDisable();
         $arrCheckout = [
             'checkout_index_index',
@@ -87,9 +86,6 @@ class InitiateCheckout implements ObserverInterface
         ];
         $actionName  = $this->request->getFullActionName();
         if (in_array($actionName, $arrCheckout) && in_array('checkout_page', $listDisable)) {
-            return true;
-        }
-        if ($session->getActionPage()) {
             return true;
         }
         if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout',
@@ -123,7 +119,7 @@ class InitiateCheckout implements ObserverInterface
             'value' => $this->checkoutSession->getQuote()->getGrandTotal(),
             'currency' => $this->fbPixelHelper->getCurrencyCode(),
         ];
-        $session->setInitiateCheckout($data);
+        $this->fbPixelSession->setInitiateCheckout($data);
 
         return true;
     }

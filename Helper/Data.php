@@ -71,7 +71,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function listPageDisable()
     {
         $list = $this->getConfig(
-            'bss_facebook_pixel/general/disable_code',
+            'bss_facebook_pixel/event_tracking/disable_code',
             $this->storeManager->getStore()->getId()
         );
         if ($list) {

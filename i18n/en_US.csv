@@ -5,7 +5,7 @@
 'Enable Facebook Pixel','Enable Facebook Pixel'
 'Pixel ID','Pixel ID'
 'Event Tracking','Event Tracking'
-'Disable Pixel Code on','Disable Pixel Code on'
+'Select pages will disable page view','Select pages will disable page view'
 'Product View','Product View'
 'Category View','Category View'
 'Add to cart','Add to cart'
@@ -15,3 +15,4 @@
 'Registration','Registration'
 'Subscribe','Subscribe'
 'Search','Search'
+'Disable Page View on','Disable Page View on'

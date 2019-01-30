@@ -26,11 +26,10 @@ define([
         var categoryData = config.categoryData;
         var registration = config.registration;
         var addToWishList = config.addToWishList;
-        var addToCart = config.addToCart;
-        var subscribe = config.subscribe;
         var initiateCheckout = config.initiateCheckout;
         var search = config.search;
         var orderData = config.orderData;
+        var pageView = config.pageView;
 
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
             n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -40,7 +39,9 @@ define([
             document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
         fbq('init', id);
-        fbq('track', 'PageView');
+        if (pageView == 'pass') {
+            fbq('track', 'PageView');
+        }
 
         if (action == 'catalog_product_view' && productData != 404) {
             fbq('track', 'ViewContent', {
@@ -72,21 +73,6 @@ define([
         if (search != 404) {
             fbq('track', 'Search', {
                 search_string : search.search_string
-            });
-        }
-
-        if (subscribe != 404) {
-            fbq('track', 'Subscribe', {
-                id : subscribe.id
-            });
-        }
-
-        if (addToCart != 404) {
-            fbq('track', 'AddToCart', {
-                content_ids: addToCart.content_ids,
-                content_type: 'product',
-                value: addToCart.value,
-                currency: addToCart.currency
             });
         }
 

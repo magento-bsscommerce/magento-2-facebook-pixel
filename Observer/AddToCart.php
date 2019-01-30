@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class AddToCart implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\SessionFactory
+     * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
     /**
@@ -41,13 +41,13 @@ class AddToCart implements ObserverInterface {
 
     /**
      * AddToCart constructor.
-     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
+        \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -65,10 +65,7 @@ class AddToCart implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $session = $this->fbPixelSession->create();
-        if ($session->getActionPage()) {
-            return true;
-        }
+
         $typeConfi = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
         if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart',
             $this->storeManager->getStore()->getId())) {
@@ -106,7 +103,7 @@ class AddToCart implements ObserverInterface {
             'currency' => $this->helper->getCurrencyCode(),
         ];
 
-        $session->setAddToCart($data);
+        $this->fbPixelSession->setAddToCart($data);
 
         return true;
     }

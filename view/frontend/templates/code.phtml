@@ -19,9 +19,7 @@
 /**
  * @var $block \Bss\FacebookPixel\Block\Code
  */
-if ($block->checkDisable()) {
-    return;
-}
+$pageView = $block->checkDisable();
 $helper = $block->getHelper();
 $session = $block->getSession();
 $data   = $block->getFacebookPixelData();
@@ -31,8 +29,6 @@ $productData = $block->getProduct();
 $categoryData = $block->getCategory();
 $registration = $block->getRegistration();
 $AddToWishlist = $block->getAddToWishList();
-$AddToCart = $block->getAddToCart();
-$Subscribe = $block->getSubscribe();
 $InitiateCheckout = $block->getInitiateCheckout();
 $search = $block->getSearch();
 $orderData = $block->getOrder();
@@ -49,12 +45,10 @@ $orderData = $block->getOrder();
                 "categoryData" : <?php echo $categoryData; ?>,
                 "registration" : <?php echo $registration; ?>,
                 "addToWishList" : <?php echo $AddToWishlist; ?>,
-                "addToCart" : <?php echo $AddToCart; ?>,
-                "subscribe" : <?php echo $Subscribe; ?>,
                 "initiateCheckout" : <?php echo  $InitiateCheckout; ?>,
                 "search" : <?php echo $search; ?>,
-                "orderData" : <?php echo $orderData ?>
-
+                "orderData" : <?php echo $orderData ?>,
+                "pageView" : "<?php echo $pageView; ?>"
             }
         }
     }

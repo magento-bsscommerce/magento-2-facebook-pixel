@@ -139,23 +139,18 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     public function checkDisable()
     {
-        $session = $this->fbPixelSession->create();
         $data   = $this->getFacebookPixelData();
         $action = $data['full_action_name'];
-        $listDisableCode = $this->listDisableCode();
+        $listDisableCode = $this->helper->listPageDisable();
         if (($action == 'checkout_onepage_success'
                 || $action == 'onepagecheckout_index_success') && in_array('success_page', $listDisableCode)) {
-            $session->setActionPage(true);
-            return true;
+            return 404;
         } elseif ($action == 'customer_account_index' && in_array('account_page', $listDisableCode)) {
-            $session->setActionPage(true);
-            return true;
+            return 404;
         } elseif (($action == 'cms_index_index' || $action == 'cms_page_view')
             && in_array('cms_page', $listDisableCode)) {
-            $session->setActionPage(true);
-            return true;
+            return 404;
         } else {
-            $session->setActionPage($this->checkDisableMore($action, $listDisableCode));
             return $this->checkDisableMore($action, $listDisableCode);
         }
     }
@@ -167,14 +162,23 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     private function checkDisableMore($action, $listDisableCode)
     {
-        if (($action == 'checkout_index_index'
-                || $action == 'onepagecheckout_index_index'
-                || $action == 'onestepcheckout_index_index'
-                || $action == 'opc_index_index') && in_array('checkout_page', $listDisableCode)) {
-            return true;
+        $arrCheckout = [
+            'checkout_index_index',
+            'onepagecheckout_index_index',
+            'onestepcheckout_index_index',
+            'opc_index_index'
+        ];
+        if (in_array($action, $arrCheckout) && in_array('checkout_page', $listDisableCode)) {
+            return 404;
         }
         if ($action == 'catalogsearch_result_index' && in_array('search_page', $listDisableCode)) {
-            return true;
+            return 404;
+        }
+        if ($action == 'catalog_product_view' && in_array('product_page', $listDisableCode)) {
+            return 404;
+        }
+        if ($action == 'customer_account_create' && in_array('registration_page', $listDisableCode)) {
+            return 404;
         }
         return $this->checkDisableMore2($action, $listDisableCode);
     }
@@ -188,12 +192,12 @@ class Code extends \Magento\Framework\View\Element\Template
     {
         if (($action == 'catalogsearch_advanced_result'
             || $action == 'catalogsearch_advanced_index') && in_array('advanced_search_page', $listDisableCode)) {
-            return true;
+            return 404;
         }
-        if ($action == 'customer_account_create' && in_array('registration_page', $listDisableCode)) {
-            return true;
+        if ($action == 'catalog_category_view' && in_array('category_page', $listDisableCode)) {
+            return 404;
         }
-        return false;
+        return 'pass';
     }
     /**
      * @return false|int|string
@@ -274,36 +278,6 @@ class Code extends \Magento\Framework\View\Element\Template
             $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $session->getAddToWishlist());
         }
         return $add_to_wishlist;
-    }
-
-    /**
-     * @return int|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getAddToCart()
-    {
-        $session = $this->fbPixelSession->create();
-        $add_to_cart = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart', $this->getStoreId())
-            && $session->hasAddToCart()) {
-            $add_to_cart = $this->helper->getPixelHtml('AddToCart', $session->getAddToCart());
-        }
-        return $add_to_cart;
-    }
-
-    /**
-     * @return int|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getSubscribe()
-    {
-        $session = $this->fbPixelSession->create();
-        $subscribe = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe', $this->getStoreId())
-            && $session->hasAddSubscribe()) {
-            $subscribe = $this->helper->getPixelHtml('Subscribe', $session->getAddSubscribe());
-        }
-        return $subscribe;
     }
 
     /**
@@ -422,23 +396,6 @@ class Code extends \Magento\Framework\View\Element\Template
         $data['full_action_name'] = $this->getRequest()->getFullActionName();
 
         return $data;
-    }
-
-    /**
-     * @return array|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    private function listDisableCode()
-    {
-        $list = $this->helper->getConfig(
-            'bss_facebook_pixel/general/disable_code',
-            $this->getStoreId()
-        );
-        if ($list) {
-            return explode(',', $list);
-        } else {
-            return [];
-        }
     }
 
     /**
@@ -587,7 +544,7 @@ class Code extends \Magento\Framework\View\Element\Template
      * @return int
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getCatalogTaxFlag()
+    private function getCatalogTaxFlag()
     {
         // Are catalog product prices with tax included or excluded?
         if ($this->taxCatalogFlag === null) {

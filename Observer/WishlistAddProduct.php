@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class WishlistAddProduct implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\SessionFactory
+     * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
 
@@ -38,12 +38,12 @@ class WishlistAddProduct implements ObserverInterface {
 
     /**
      * WishlistAddProduct constructor.
-     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
+        \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
@@ -59,10 +59,6 @@ class WishlistAddProduct implements ObserverInterface {
      */
     public function execute( \Magento\Framework\Event\Observer $observer )
     {
-        $session = $this->fbPixelSession->create();
-        if ($session->getActionPage()) {
-            return true;
-        }
         /** @var \Magento\Catalog\Model\Product $product */
         $product = $observer->getProduct();
         if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist',
@@ -77,7 +73,7 @@ class WishlistAddProduct implements ObserverInterface {
             'currency' => $this->helper->getCurrencyCode()
         ];
 
-        $session->setAddToWishlist($data);
+        $this->fbPixelSession->setAddToWishlist($data);
         
         return true;
 	}

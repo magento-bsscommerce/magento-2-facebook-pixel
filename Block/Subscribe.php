@@ -20,7 +20,7 @@ namespace Bss\FacebookPixel\Block;
 use Magento\Customer\CustomerData\SectionSourceInterface;
 use Magento\Customer\Helper\Session\CurrentCustomer;
 
-class Atc implements SectionSourceInterface
+class Subscribe implements SectionSourceInterface
 {
 
     /**
@@ -29,17 +29,17 @@ class Atc implements SectionSourceInterface
     protected $helper;
 
     /**
-     * @var \Magento\Framework\UrlInterface 
+     * @var \Magento\Framework\UrlInterface
      */
     protected $urlBuilder;
 
     /**
-     * @var \Magento\Customer\Model\Session 
+     * @var \Magento\Customer\Model\Session
      */
     protected $customerSession;
 
     /**
-     * @var CurrentCustomer 
+     * @var CurrentCustomer
      */
     protected $currentCustomer;
 
@@ -81,12 +81,12 @@ class Atc implements SectionSourceInterface
             'events' => []
         ];
 
-        if ($this->fbPixelSession->hasAddToCart()) {
+        if ($this->fbPixelSession->hasAddSubscribe()) {
             // Get the add-to-cart information since it's unique to the user
             // but might be displayed on a cached page
             $data['events'][] = [
-                'eventName' => 'AddToCart',
-                'eventAdditional' => $this->fbPixelSession->getAddToCart()
+                'eventName' => 'Subscribe',
+                'eventAdditional' => $this->fbPixelSession->getAddSubscribe()
             ];
         }
         return $data;

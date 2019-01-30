@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class Subcribe implements ObserverInterface {
 
     /**
-     * @var \Bss\FacebookPixel\Model\SessionFactory
+     * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
     /**
@@ -41,13 +41,13 @@ class Subcribe implements ObserverInterface {
 
     /**
      * Subcribe constructor.
-     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
+        \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -66,10 +66,6 @@ class Subcribe implements ObserverInterface {
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $session = $this->fbPixelSession->create();
-        if ($session->getActionPage()) {
-            return true;
-        }
         $email = $observer->getEvent()->getSubscriber()->getSubscriberEmail();
         $subscribeId =$observer->getEvent()->getSubscriber()->getSubscriberId();
         if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe',
@@ -81,7 +77,7 @@ class Subcribe implements ObserverInterface {
             'id' => $subscribeId
         ];
 
-        $session->setAddSubscribe($data);
+        $this->fbPixelSession->setAddSubscribe($data);
 
         return true;
     }
