@@ -93,13 +93,17 @@ define([
                 contents: orderData.contents,
                 value: orderData.value,
                 num_items : orderData.num_items,
+                email : orderData.email,
+                address : orderData.address,
                 currency: orderData.currency
             });
         }
 
         if (registration != 404) {
             fbq('track', 'CompleteRegistration', {
-                customer_id: registration.customer_id
+                customer_id: registration.customer_id,
+                email : registration.email,
+                fullname : registration.fullname
             });
         }
     }

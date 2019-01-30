@@ -67,8 +67,11 @@ class Register implements ObserverInterface {
         ) {
             return true;
         }
+        $name = $customer->getFirstName()." ".$customer->getLastName();
         $data = [
-            'customer_id' => $customer->getId()
+            'customer_id' => $customer->getId(),
+            'email' => $customer->getEmail(),
+            'name' => $name
         ];
 
         $this->fbPixelSession->setRegister($data);

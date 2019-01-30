@@ -324,11 +324,32 @@ class Code extends \Magento\Framework\View\Element\Template
         $orderId = $order->getIncrementId();
 
         if ($orderId) {
+            $customerEmail = $order->getCustomerEmail();
+            $shippingAddress = $order->getShippingAddress()->getData();
+            $shippingData = [];
+            $shippingData['firstname'] = $shippingAddress['firstname'];
+
+            $shippingData['lastname'] = $shippingAddress['lastname'];
+
+            $shippingData['telephone'] = $shippingAddress['telephone'];
+
+            $shippingData['street'] = $shippingAddress['street'];
+
+            $shippingData['city'] = $shippingAddress['city'];
+
+            $shippingData['region'] = $shippingAddress['region'];
+
+            $shippingData['postcode'] = $shippingAddress['postcode'];
+            $paymentType = $order->getPayment()->getMethodInstance()->getTitle();
+            $shippingData['payment'] = $paymentType;
             $product = [
                 'content_ids' => [],
                 'contents' => [],
                 'value' => "",
-                'currency' => ""
+                'currency' => "",
+                'num_items' => 0,
+                'email' => "",
+                'address' => []
             ];
 
             $num_item = 0;
@@ -353,7 +374,9 @@ class Code extends \Magento\Framework\View\Element\Template
                     ''
                 ),
                 'num_items' => $num_item,
-                'currency' => $order->getOrderCurrencyCode()
+                'currency' => $order->getOrderCurrencyCode(),
+                'email' => $customerEmail,
+                'address' => $shippingData
             ];
 
 
