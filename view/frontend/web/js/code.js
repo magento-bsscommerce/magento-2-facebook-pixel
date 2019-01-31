@@ -39,6 +39,12 @@ define([
             document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
         fbq('init', id);
+        if (action == 'checkout_index_index') {
+            fbq.disablePushState = true;
+        }
+        if (pageView == 'pass') {
+            fbq('track', 'PageView');
+        }
 
         if (action == 'catalog_product_view' && productData != 404) {
             fbq('track', 'ViewContent', {
