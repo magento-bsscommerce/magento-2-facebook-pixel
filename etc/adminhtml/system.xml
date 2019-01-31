@@ -44,7 +44,7 @@
         <group id="event_tracking" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label><![CDATA[Event Tracking]]></label>
             <field id="disable_code" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label><![CDATA[Disable Page View on]]></label>
+                <label><![CDATA[Disable Pageview on]]></label>
                 <source_model>Bss\FacebookPixel\Model\Config\Source\Pages</source_model>
                 <comment><![CDATA[Select pages to disable pageview.]]></comment>
                 <can_be_empty>1</can_be_empty>
@@ -70,7 +70,7 @@
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
             <field id="add_to_wishlist" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label><![CDATA[Add to Wish List]]></label>
+                <label><![CDATA[Add to Wishlist]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
             <field id="registration" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
