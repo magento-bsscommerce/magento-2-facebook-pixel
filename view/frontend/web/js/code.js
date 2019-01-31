@@ -39,9 +39,6 @@ define([
             document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
         fbq('init', id);
-        if (pageView == 'pass') {
-            fbq('track', 'PageView');
-        }
 
         if (action == 'catalog_product_view' && productData != 404) {
             fbq('track', 'ViewContent', {
@@ -103,7 +100,7 @@ define([
             fbq('track', 'CompleteRegistration', {
                 customer_id: registration.customer_id,
                 email : registration.email,
-                fullname : registration.fullname
+                name : registration.name
             });
         }
     }

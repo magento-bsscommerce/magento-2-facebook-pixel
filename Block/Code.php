@@ -327,9 +327,7 @@ class Code extends \Magento\Framework\View\Element\Template
             $customerEmail = $order->getCustomerEmail();
             $shippingAddress = $order->getShippingAddress()->getData();
             $shippingData = [];
-            $shippingData['firstname'] = $shippingAddress['firstname'];
-
-            $shippingData['lastname'] = $shippingAddress['lastname'];
+            $shippingData['name'] = $shippingAddress['firstname']." ".$shippingAddress['lastname'];
 
             $shippingData['telephone'] = $shippingAddress['telephone'];
 

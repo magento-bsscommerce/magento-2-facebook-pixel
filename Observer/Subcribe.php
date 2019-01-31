@@ -74,7 +74,8 @@ class Subcribe implements ObserverInterface {
         }
 
         $data = [
-            'id' => $subscribeId
+            'id' => $subscribeId,
+            'email' => $observer->getEvent()->getSubscriber()->getSubscriberEmail()
         ];
 
         $this->fbPixelSession->setAddSubscribe($data);

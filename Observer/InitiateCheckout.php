@@ -77,17 +77,6 @@ class InitiateCheckout implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $listDisable = $this->fbPixelHelper->listPageDisable();
-        $arrCheckout = [
-            'checkout_index_index',
-            'onepagecheckout_index_index',
-            'onestepcheckout_index_index',
-            'opc_index_index'
-        ];
-        $actionName  = $this->request->getFullActionName();
-        if (in_array($actionName, $arrCheckout) && in_array('checkout_page', $listDisable)) {
-            return true;
-        }
         if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout',
             $this->storeManager->getStore()->getId())) {
             return true;
