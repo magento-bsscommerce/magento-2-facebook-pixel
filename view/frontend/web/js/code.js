@@ -39,7 +39,7 @@ define([
             document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
         fbq('init', id);
-        if (action == 'checkout_index_index') {
+        if (action == 'checkout_index_index' && pageView != 'pass') {
             fbq.disablePushState = true;
         }
         if (pageView == 'pass') {
