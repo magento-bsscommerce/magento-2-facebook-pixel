@@ -38,6 +38,7 @@ define([
             t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window,
             document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
         window.fb = function() {
             if (registration.email) {
                 fbq('init', id, {
@@ -47,7 +48,7 @@ define([
                 });
             } else if (orderData.content_ids) {
                 fbq('init', id, {
-                    em : registration.email,
+                    em : orderData.email,
                     ph : orderData.phone,
                     fn : orderData.firtname,
                     ln : orderData.lastname,
