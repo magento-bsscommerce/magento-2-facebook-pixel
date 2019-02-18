@@ -67,8 +67,7 @@ class AddToCart implements ObserverInterface {
     {
 
         $typeConfi = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart',
-            $this->storeManager->getStore()->getId())) {
+        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart')) {
             return true;
         }
         $items = $observer->getItems();

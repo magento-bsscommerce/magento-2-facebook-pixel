@@ -61,8 +61,7 @@ class WishlistAddProduct implements ObserverInterface {
     {
         /** @var \Magento\Catalog\Model\Product $product */
         $product = $observer->getProduct();
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist',
-                $this->storeManager->getStore()->getId()) || !$product) {
+        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist') || !$product) {
             return true;
         }
         

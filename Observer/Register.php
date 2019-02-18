@@ -61,17 +61,16 @@ class Register implements ObserverInterface {
     {
         $customer = $observer->getEvent()->getCustomer();
         if (
-            !$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/registration',
-                $this->storeManager->getStore()->getId()) ||
+            !$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/registration') ||
             !$customer
         ) {
             return true;
         }
-        $name = $customer->getFirstName()." ".$customer->getLastName();
         $data = [
             'customer_id' => $customer->getId(),
             'email' => $customer->getEmail(),
-            'name' => $name
+            'fn' => $customer->getFirstName(),
+            'ln' => $customer->getLastName()
         ];
 
         $this->fbPixelSession->setRegister($data);

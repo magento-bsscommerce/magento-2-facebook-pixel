@@ -81,8 +81,7 @@ class Search implements ObserverInterface {
                 $text[$key] = $value;
             }
         }
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/search',
-                $this->storeManager->getStore()->getId()) || !$text) {
+        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/search') || !$text) {
             return true;
         }
 

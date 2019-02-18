@@ -68,8 +68,7 @@ class Subcribe implements ObserverInterface {
     {
         $email = $observer->getEvent()->getSubscriber()->getSubscriberEmail();
         $subscribeId =$observer->getEvent()->getSubscriber()->getSubscriberId();
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe',
-                $this->storeManager->getStore()->getId()) || !$email) {
+        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/subscribe') || !$email) {
             return true;
         }
 

@@ -82,8 +82,6 @@ class Subscribe implements SectionSourceInterface
         ];
 
         if ($this->fbPixelSession->hasAddSubscribe()) {
-            // Get the add-to-cart information since it's unique to the user
-            // but might be displayed on a cached page
             $data['events'][] = [
                 'eventName' => 'Subscribe',
                 'eventAdditional' => $this->fbPixelSession->getAddSubscribe()

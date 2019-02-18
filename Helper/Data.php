@@ -71,8 +71,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function listPageDisable()
     {
         $list = $this->getConfig(
-            'bss_facebook_pixel/event_tracking/disable_code',
-            $this->storeManager->getStore()->getId()
+            'bss_facebook_pixel/event_tracking/disable_code'
         );
         if ($list) {
             return explode(',', $list);
@@ -88,12 +87,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string|int $scope
      * @return string
      */
-    public function getConfig($configPath, $scope = 'default')
+    public function getConfig($configPath)
     {
         return $this->scopeConfig->getValue(
             $configPath,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $scope
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }
 

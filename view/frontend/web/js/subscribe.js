@@ -15,10 +15,12 @@
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
 define([
+    'jquery',
     'ko',
     'uiComponent',
-    'Magento_Customer/js/customer-data'
-], function (ko, Component, customerData) {
+    'Magento_Customer/js/customer-data',
+    'Bss_FacebookPixel/js/code'
+], function (jQuery, ko, Component, customerData, code) {
     'use strict';
     return Component.extend({
         initialize: function () {
@@ -29,10 +31,12 @@ define([
                     for (var eventCounter = 0; eventCounter < loadedData.events.length; eventCounter++) {
                         var eventData = loadedData.events[eventCounter];
                         if ("undefined" !== typeof eventData.eventAdditional && eventData.eventAdditional) {
-                            fbq('track', eventData.eventName, eventData.eventAdditional || {});
+                            jQuery('.bss-subscribe-email').text(eventData.eventAdditional.email);
+                            jQuery('.bss-subscribe-id').text(eventData.eventAdditional.id);
+                            customerData.set('bss-fbpixel-subscribe', {});
+                            return window.fb();
                         }
                     }
-                    customerData.set('bss-fbpixel-subscribe', {});
                 }
             });
         }

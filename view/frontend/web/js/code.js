@@ -31,83 +31,117 @@ define([
         var orderData = config.orderData;
         var pageView = config.pageView;
 
+
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
             n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
             n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
             t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window,
             document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        window.fb = function() {
+            if (registration.email) {
+                fbq('init', id, {
+                    em : registration.email,
+                    fn : registration.fn,
+                    ln : registration.ln,
+                });
+            } else if (orderData.content_ids) {
+                fbq('init', id, {
+                    em : registration.email,
+                    ph : orderData.phone,
+                    fn : orderData.firtname,
+                    ln : orderData.lastname,
+                    ct : orderData.city,
+                    st : orderData.st,
+                    country : orderData.country,
+                    zp : orderData.zipcode
+                });
+            } else if ($('.bss-subscribe-email').text()) {
+                fbq('init', id, {
+                    em : $('.bss-subscribe-email').text()
+                });
+            } else {
+                fbq('init', id);
+            }
 
-        fbq('init', id);
-        if (action == 'checkout_index_index' && pageView != 'pass') {
-            fbq.disablePushState = true;
-        }
-        if (pageView == 'pass') {
-            fbq('track', 'PageView');
-        }
+            if ($('.bss-subscribe-email').text()) {
+                fbq('track', 'Subscribe', {
+                    id : $('.bss-subscribe-id').text()
+                });
 
-        if (action == 'catalog_product_view' && productData != 404) {
-            fbq('track', 'ViewContent', {
-                content_name: productData.content_name ,
-                content_ids: productData.content_ids,
-                content_type: 'product',
-                value: productData.value,
-                currency: productData.currency
-            });
-        }
-        if (action == 'catalog_category_view' && categoryData != 404) {
-            fbq('trackCustom', 'ViewCategory', {
-                content_name: categoryData.content_name,
-                content_ids: categoryData.content_ids,
-                content_type: 'product_group',
-                currency: categoryData.currency
-            });
-        }
+                $('.bss-subscribe-id').text('');
+                $('.bss-subscribe-email').text('');
+            }
 
-        if (addToWishList != 404) {
-            fbq('track', 'AddToWishlist', {
-                content_type : 'product',
-                content_ids : addToWishList.content_ids,
-                value : addToWishList.value,
-                currency : addToWishList.currency
-            });
-        }
+            if (action == 'checkout_index_index' && pageView != 'pass') {
+                fbq.disablePushState = true;
+            }
 
-        if (search != 404) {
-            fbq('track', 'Search', {
-                search_string : search.search_string
-            });
-        }
+            if (pageView == 'pass') {
+                fbq('track', 'PageView');
+            }
 
-        if (initiateCheckout != 404) {
-            fbq('track', 'InitiateCheckout', {
-                content_ids: initiateCheckout.content_ids,
-                content_type: 'product',
-                contents: initiateCheckout.contents,
-                value: initiateCheckout.value,
-                currency: initiateCheckout.currency
-            });
-        }
+            if (action == 'catalog_product_view' && productData != 404) {
+                fbq('track', 'ViewContent', {
+                    content_name: productData.content_name ,
+                    content_ids: productData.content_ids,
+                    content_type: 'product',
+                    value: productData.value,
+                    currency: productData.currency
+                });
+            }
 
-        if (orderData != 404) {
-            fbq('track', 'Purchase', {
-                content_ids: orderData.content_ids,
-                content_type: 'product',
-                contents: orderData.contents,
-                value: orderData.value,
-                num_items : orderData.num_items,
-                email : orderData.email,
-                address : orderData.address,
-                currency: orderData.currency
-            });
-        }
+            if (action == 'catalog_category_view' && categoryData != 404) {
+                fbq('trackCustom', 'ViewCategory', {
+                    content_name: categoryData.content_name,
+                    content_ids: categoryData.content_ids,
+                    content_type: 'product_group',
+                    currency: categoryData.currency
+                });
+            }
 
-        if (registration != 404) {
-            fbq('track', 'CompleteRegistration', {
-                customer_id: registration.customer_id,
-                email : registration.email,
-                name : registration.name
-            });
-        }
+            if (addToWishList != 404) {
+                fbq('track', 'AddToWishlist', {
+                    content_type : 'product',
+                    content_ids : addToWishList.content_ids,
+                    value : addToWishList.value,
+                    currency : addToWishList.currency
+                });
+            }
+
+            if (search != 404) {
+                fbq('track', 'Search', {
+                    search_string : search.search_string
+                });
+            }
+
+            if (initiateCheckout != 404) {
+                fbq('track', 'InitiateCheckout', {
+                    content_ids: initiateCheckout.content_ids,
+                    content_type: 'product',
+                    contents: initiateCheckout.contents,
+                    value: initiateCheckout.value,
+                    currency: initiateCheckout.currency
+                });
+            }
+
+            if (orderData != 404) {
+                fbq('track', 'Purchase', {
+                    content_ids: orderData.content_ids,
+                    content_type: 'product',
+                    contents: orderData.contents,
+                    value: orderData.value,
+                    num_items : orderData.num_items,
+                    currency: orderData.currency
+                });
+            }
+
+            if (registration != 404) {
+                fbq('track', 'CompleteRegistration', {
+                    customer_id: registration.customer_id
+                });
+            }
+        };
+        return window.fb();
     }
 });

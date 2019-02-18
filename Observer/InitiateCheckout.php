@@ -77,8 +77,7 @@ class InitiateCheckout implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout',
-            $this->storeManager->getStore()->getId())) {
+        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')) {
             return true;
         }
         if (empty($this->checkoutSession->getQuote()->getAllVisibleItems())) {

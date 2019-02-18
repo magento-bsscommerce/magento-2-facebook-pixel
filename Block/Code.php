@@ -258,7 +258,7 @@ class Code extends \Magento\Framework\View\Element\Template
     {
         $session = $this->fbPixelSession->create();
         $registration = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration', $this->getStoreId())
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration')
             && $session->hasRegister()) {
             $registration = $this->helper->getPixelHtml('CompleteRegistration', $session->getRegister());
         }
@@ -273,7 +273,7 @@ class Code extends \Magento\Framework\View\Element\Template
     {
         $session = $this->fbPixelSession->create();
         $add_to_wishlist = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist', $this->getStoreId())
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist')
             && $session->hasAddToWishlist()) {
             $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $session->getAddToWishlist());
         }
@@ -288,7 +288,7 @@ class Code extends \Magento\Framework\View\Element\Template
     {
         $session = $this->fbPixelSession->create();
         $initiateCheckout = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout', $this->getStoreId())
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')
             && $session->hasInitiateCheckout()) {
             $initiateCheckout = $this->helper->getPixelHtml(
                 'InitiateCheckout',
@@ -305,12 +305,12 @@ class Code extends \Magento\Framework\View\Element\Template
     public function getSearch()
     {
         $session = $this->fbPixelSession->create();
-        $subscribe = 404;
-        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search', $this->getStoreId())
+        $search = 404;
+        if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search')
             && $session->hasSearch()) {
-            $subscribe = $this->helper->getPixelHtml('Search', $session->getSearch());
+            $search = $this->helper->getPixelHtml('Search', $session->getSearch());
         }
-        return $subscribe;
+        return $search;
     }
 
     /**
@@ -326,20 +326,6 @@ class Code extends \Magento\Framework\View\Element\Template
         if ($orderId) {
             $customerEmail = $order->getCustomerEmail();
             $shippingAddress = $order->getShippingAddress()->getData();
-            $shippingData = [];
-            $shippingData['name'] = $shippingAddress['firstname']." ".$shippingAddress['lastname'];
-
-            $shippingData['telephone'] = $shippingAddress['telephone'];
-
-            $shippingData['street'] = $shippingAddress['street'];
-
-            $shippingData['city'] = $shippingAddress['city'];
-
-            $shippingData['region'] = $shippingAddress['region'];
-
-            $shippingData['postcode'] = $shippingAddress['postcode'];
-            $paymentType = $order->getPayment()->getMethodInstance()->getTitle();
-            $shippingData['payment'] = $paymentType;
             $product = [
                 'content_ids' => [],
                 'contents' => [],
@@ -374,10 +360,14 @@ class Code extends \Magento\Framework\View\Element\Template
                 'num_items' => $num_item,
                 'currency' => $order->getOrderCurrencyCode(),
                 'email' => $customerEmail,
-                'address' => $shippingData
+                'phone' => $shippingAddress['telephone'],
+                'firtname' => $shippingAddress['firstname'],
+                'lastname' =>$shippingAddress['lastname'],
+                'city' => $shippingAddress['city'],
+                'country' => $shippingAddress['country_id'],
+                'st' => $shippingAddress['region'],
+                'zipcode' => $shippingAddress['postcode']
             ];
-
-
             return json_encode($data);
         } else {
             return 404;
@@ -410,8 +400,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $data = [];
 
         $data['id'] = $this->helper->getConfig(
-            'bss_facebook_pixel/general/pixel_id',
-            $this->getStoreId()
+            'bss_facebook_pixel/general/pixel_id'
         );
 
         $data['full_action_name'] = $this->getRequest()->getFullActionName();
@@ -426,8 +415,7 @@ class Code extends \Magento\Framework\View\Element\Template
     private function getProductData()
     {
         if (!$this->helper->getConfig(
-            'bss_facebook_pixel/event_tracking/product_view',
-            $this->getStoreId()
+            'bss_facebook_pixel/event_tracking/product_view'
         )) {
             return [];
         }
@@ -455,8 +443,7 @@ class Code extends \Magento\Framework\View\Element\Template
     private function getCategoryData()
     {
         if (!$this->helper->getConfig(
-            'bss_facebook_pixel/event_tracking/category_view',
-            $this->getStoreId()
+            'bss_facebook_pixel/event_tracking/category_view'
         )) {
             return [];
         }
@@ -570,8 +557,7 @@ class Code extends \Magento\Framework\View\Element\Template
         // Are catalog product prices with tax included or excluded?
         if ($this->taxCatalogFlag === null) {
             $this->taxCatalogFlag = (int) $this->helper->getConfig(
-                'tax/calculation/price_includes_tax',
-                $this->getStoreId()
+                'tax/calculation/price_includes_tax'
             );
         }
 
