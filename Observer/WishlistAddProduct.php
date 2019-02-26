@@ -37,6 +37,11 @@ class WishlistAddProduct implements ObserverInterface {
     protected $storeManager;
 
     /**
+     * @var \Magento\Catalog\Model\Product
+     */
+    protected $productModel;
+
+    /**
      * WishlistAddProduct constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
@@ -45,11 +50,13 @@ class WishlistAddProduct implements ObserverInterface {
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Catalog\Model\Product $product
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->helper        = $helper;
         $this->storeManager = $storeManager;
+        $this->productModel = $product;
     }
 
     /**
@@ -59,8 +66,9 @@ class WishlistAddProduct implements ObserverInterface {
      */
     public function execute( \Magento\Framework\Event\Observer $observer )
     {
+        $productId = $observer->getItem()->getOptionByCode('simple_product')->getValue();
+        $product = $this->productModel->load($productId);
         /** @var \Magento\Catalog\Model\Product $product */
-        $product = $observer->getProduct();
         if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist') || !$product) {
             return true;
         }

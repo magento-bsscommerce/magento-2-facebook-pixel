@@ -90,7 +90,7 @@ class InitiateCheckout implements ObserverInterface
             'value' => "",
             'currency' => ""
         ];
-        $items = $this->checkoutSession->getQuote()->getAllItems();
+        $items = $this->checkoutSession->getQuote()->getAllVisibleItems();
         foreach ($items as $item) {
             $product['contents'][] = [
                 'id' => $item->getSku(),
