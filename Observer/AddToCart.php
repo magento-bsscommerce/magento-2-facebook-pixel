@@ -82,7 +82,7 @@ class AddToCart implements ObserverInterface {
             if ($item->getProduct()->getTypeId() == $typeConfi) {
                 continue;
             }
-            $product['value'] += $item->getQtyToAdd();
+            $product['value'] = 1;
             $product['contents'][] = [
                 'id' => $item->getSku(),
                 'name' => $item->getName(),
