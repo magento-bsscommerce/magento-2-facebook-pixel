@@ -105,6 +105,7 @@ define([
                 fbq('track', 'AddToWishlist', {
                     content_type : 'product',
                     content_ids : addToWishList.content_ids,
+                    content_name : addToWishList.content_name,
                     value : addToWishList.value,
                     currency : addToWishList.currency
                 });

@@ -74,7 +74,8 @@ class WishlistAddProduct implements ObserverInterface {
         
         $data = [
             'content_type' => 'product',
-            'content_ids' => [$product->getSku()],
+            'content_ids' => $product->getSku(),
+            'content_name' => $product->getName(),
             'value' => $product->getFinalPrice(),
             'currency' => $this->helper->getCurrencyCode()
         ];
