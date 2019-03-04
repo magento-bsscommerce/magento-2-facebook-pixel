@@ -58,8 +58,14 @@
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
             <field id="add_to_cart" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label><![CDATA[Add to cart]]></label>
+                <label><![CDATA[Add to Cart]]></label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            </field>
+            <field id="value_add_to_cart" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label><![CDATA[Set Value]]></label>
+                <comment><![CDATA[Set parameter value of event Add to cart.]]></comment>
+                <validate>required-entry validate-number</validate>
+                <depends><field id="*/event_tracking/add_to_cart">1</field></depends>
             </field>
             <field id="initiate_checkout" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label><![CDATA[Initiate Checkout]]></label>

@@ -40,6 +40,11 @@ class AddToCart implements ObserverInterface {
     protected $storeManager;
 
     /**
+     * @var \Magento\Framework\Pricing\Helper\Data
+     */
+    protected $dataPrice;
+
+    /**
      * AddToCart constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -50,12 +55,14 @@ class AddToCart implements ObserverInterface {
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Pricing\Helper\Data $dataPrice
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->checkoutSession = $checkoutSession;
         $this->helper        = $helper;
         $this->storeManager = $storeManager;
+        $this->dataPrice = $dataPrice;
     }
 
     /**
@@ -82,12 +89,11 @@ class AddToCart implements ObserverInterface {
             if ($item->getProduct()->getTypeId() == $typeConfi) {
                 continue;
             }
-            $product['value'] = 1;
             $product['contents'][] = [
                 'id' => $item->getSku(),
                 'name' => $item->getName(),
                 'quantity' => $item->getQtyToAdd(),
-                'item_price' => $item->getProduct()->getFinalPrice()
+                'item_price' => $this->dataPrice->currency($item->getProduct()->getFinalPrice(), false, false)
             ];
             $product['content_ids'][] = $item->getSku();
         }
@@ -96,7 +102,7 @@ class AddToCart implements ObserverInterface {
             'content_type' => 'product',
             'content_ids' => $product['content_ids'],
             'contents' => $product['contents'],
-            'value' => $product['value'],
+            'value' => $this->helper->getConfig('bss_facebook_pixel/event_tracking/value_add_to_cart'),
             'currency' => $this->helper->getCurrencyCode(),
         ];
 
