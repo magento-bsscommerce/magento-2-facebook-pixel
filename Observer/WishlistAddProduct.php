@@ -51,6 +51,8 @@ class WishlistAddProduct implements ObserverInterface {
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \Magento\Framework\Pricing\Helper\Data $dataPrice
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
@@ -83,7 +85,6 @@ class WishlistAddProduct implements ObserverInterface {
             'content_type' => 'product',
             'content_ids' => $product->getSku(),
             'content_name' => $product->getName(),
-            'value' => $this->dataPrice->currency($product->getFinalPrice(), false, false),
             'currency' => $this->helper->getCurrencyCode()
         ];
 

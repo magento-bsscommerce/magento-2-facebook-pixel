@@ -50,6 +50,7 @@ class AddToCart implements ObserverInterface {
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Pricing\Helper\Data $dataPrice
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
@@ -80,7 +81,6 @@ class AddToCart implements ObserverInterface {
         }
         $product = [
             'content_ids' => [],
-            'value' => 0.00,
             'currency' => ""
         ];
 
@@ -102,7 +102,6 @@ class AddToCart implements ObserverInterface {
             'content_type' => 'product',
             'content_ids' => $product['content_ids'],
             'contents' => $product['contents'],
-            'value' => $this->helper->getConfig('bss_facebook_pixel/event_tracking/value_add_to_cart'),
             'currency' => $this->helper->getCurrencyCode(),
         ];
 
