@@ -48,6 +48,11 @@ class InitiateCheckout implements ObserverInterface
     protected $storeManager;
 
     /**
+     * @var \Magento\Framework\Pricing\Helper\Data
+     */
+    protected $dataPrice;
+
+    /**
      * InitiateCheckout constructor.
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
@@ -60,13 +65,15 @@ class InitiateCheckout implements ObserverInterface
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Bss\FacebookPixel\Model\Session $fbPixelSession
+        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Magento\Framework\Pricing\Helper\Data $dataPrice
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelHelper         = $helper;
         $this->request = $request;
         $this->storeManager = $storeManager;
         $this->fbPixelSession = $fbPixelSession;
+        $this->dataPrice = $dataPrice;
     }
 
     /**
@@ -96,7 +103,7 @@ class InitiateCheckout implements ObserverInterface
                 'id' => $item->getSku(),
                 'name' => $item->getName(),
                 'quantity' => $item->getQty(),
-                'item_price' => $item->getPrice()
+                'item_price' => $this->dataPrice->currency($item->getPrice(), false, false)
             ];
             $product['content_ids'][] = $item->getSku();
         }
