@@ -92,8 +92,7 @@ class AddToCart implements ObserverInterface {
             $product['contents'][] = [
                 'id' => $item->getSku(),
                 'name' => $item->getName(),
-                'quantity' => $item->getQtyToAdd(),
-                'item_price' => $this->dataPrice->currency($item->getProduct()->getFinalPrice(), false, false)
+                'quantity' => $item->getQtyToAdd()
             ];
             $product['content_ids'][] = $item->getSku();
         }
