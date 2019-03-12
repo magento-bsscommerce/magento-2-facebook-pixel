@@ -19,7 +19,8 @@ namespace Bss\FacebookPixel\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class Subcribe implements ObserverInterface {
+class Subcribe implements ObserverInterface
+{
 
     /**
      * @var \Bss\FacebookPixel\Model\Session

@@ -24,7 +24,7 @@ define([
         initialize: function () {
             var self = this;
             self._super();
-            customerData.get('bss-fbpixel-atc').subscribe(function(loadedData){
+            customerData.get('bss-fbpixel-atc').subscribe(function (loadedData) {
                 if (loadedData && "undefined" !== typeof loadedData.events) {
                     for (var eventCounter = 0; eventCounter < loadedData.events.length; eventCounter++) {
                         var eventData = loadedData.events[eventCounter];

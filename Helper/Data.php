@@ -49,10 +49,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $storeId = null;
 
     /**
-     * Constructor
-     *
+     * @var \Bss\FacebookPixel\Model\Session
+     */
+    protected $fbPixelSession;
+
+    /**
+     * Data constructor.
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -68,6 +74,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
     }
 
+    /**
+     * @return array
+     */
     public function listPageDisable()
     {
         $list = $this->getConfig(
@@ -110,14 +119,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @return mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getCurrencyCode(){
+    public function getCurrencyCode()
+    {
         return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
     }
 
     /**
      * @return \Bss\FacebookPixel\Model\Session
      */
-    public function getSession(){
+    public function getSession()
+    {
         return $this->fbPixelSession;
     }
 

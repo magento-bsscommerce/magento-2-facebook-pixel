@@ -60,7 +60,9 @@ class Session extends \Magento\Framework\Session\SessionManager
         return $this;
     }
 
-
+    /**
+     * @return mixed|null
+     */
     public function getAddToWishlist()
     {
         if ($this->hasAddToWishlist()) {

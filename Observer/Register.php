@@ -19,7 +19,8 @@ namespace Bss\FacebookPixel\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class Register implements ObserverInterface {
+class Register implements ObserverInterface
+{
 
     /**
      * @var \Bss\FacebookPixel\Model\Session
@@ -48,7 +49,7 @@ class Register implements ObserverInterface {
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->fbPixelSession = $fbPixelSession;
-        $this->fbPixelHelper        = $helper;
+        $this->fbPixelHelper  = $helper;
         $this->storeManager = $storeManager;
     }
 
@@ -60,9 +61,8 @@ class Register implements ObserverInterface {
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $customer = $observer->getEvent()->getCustomer();
-        if (
-            !$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/registration') ||
-            !$customer
+        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/registration')
+            || !$customer
         ) {
             return true;
         }

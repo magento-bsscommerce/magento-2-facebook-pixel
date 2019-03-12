@@ -19,7 +19,8 @@ namespace Bss\FacebookPixel\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class WishlistAddProduct implements ObserverInterface {
+class WishlistAddProduct implements ObserverInterface
+{
 
     /**
      * @var \Bss\FacebookPixel\Model\Session
@@ -73,7 +74,7 @@ class WishlistAddProduct implements ObserverInterface {
      * @return boolean
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute( \Magento\Framework\Event\Observer $observer )
+    public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $product = $observer->getItem()->getProduct();
         /** @var \Magento\Catalog\Model\Product $product */
@@ -91,5 +92,5 @@ class WishlistAddProduct implements ObserverInterface {
         $this->fbPixelSession->setAddToWishlist($data);
         
         return true;
-	}
+    }
 }

@@ -18,31 +18,9 @@
 namespace Bss\FacebookPixel\Block;
 
 use Magento\Customer\CustomerData\SectionSourceInterface;
-use Magento\Customer\Helper\Session\CurrentCustomer;
 
-class Atc implements SectionSourceInterface
+class AddToCart implements SectionSourceInterface
 {
-
-    /**
-     * @var \Bss\FacebookPixel\Helper\Data
-     */
-    protected $helper;
-
-    /**
-     * @var \Magento\Framework\UrlInterface 
-     */
-    protected $urlBuilder;
-
-    /**
-     * @var \Magento\Customer\Model\Session 
-     */
-    protected $customerSession;
-
-    /**
-     * @var CurrentCustomer 
-     */
-    protected $currentCustomer;
-
     /**
      * @var \Bss\FacebookPixel\Model\Session
      */
@@ -50,23 +28,11 @@ class Atc implements SectionSourceInterface
 
     /**
      * Atc constructor.
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Bss\FacebookPixel\Helper\Data $helper
-     * @param CurrentCustomer $currentCustomer
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      */
     public function __construct(
-        \Magento\Framework\UrlInterface $urlBuilder,
-        \Magento\Customer\Model\Session $customerSession,
-        \Bss\FacebookPixel\Helper\Data $helper,
-        CurrentCustomer $currentCustomer,
         \Bss\FacebookPixel\Model\Session $fbPixelSession
     ) {
-        $this->urlBuilder = $urlBuilder;
-        $this->customerSession = $customerSession;
-        $this->helper = $helper;
-        $this->currentCustomer = $currentCustomer;
         $this->fbPixelSession = $fbPixelSession;
     }
 

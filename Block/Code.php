@@ -16,6 +16,7 @@
  * @license   http://bsscommerce.com/Bss-Commerce-License.txt
  */
 namespace Bss\FacebookPixel\Block;
+
 /**
  * Class Code
  * @package Bss\FacebookPixel\Block
@@ -663,7 +664,7 @@ class Code extends \Magento\Framework\View\Element\Template
      */
     private function getFinalPrice($product, $price = null)
     {
-       $price = $this->resultPriceFinal($product, $price);
+        $price = $this->resultPriceFinal($product, $price);
 
         $productType = $product->getTypeId();
         //  Apply tax if needed

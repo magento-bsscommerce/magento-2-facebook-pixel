@@ -19,8 +19,8 @@ namespace Bss\FacebookPixel\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class AddToCart implements ObserverInterface {
-
+class AddToCart implements ObserverInterface
+{
     /**
      * @var \Bss\FacebookPixel\Model\Session
      */
