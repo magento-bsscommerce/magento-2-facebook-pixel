@@ -20,7 +20,6 @@ namespace Bss\FacebookPixel\Block;
 /**
  * Class Code
  * @package Bss\FacebookPixel\Block
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Code extends \Magento\Framework\View\Element\Template
 {
