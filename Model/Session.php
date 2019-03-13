@@ -20,8 +20,8 @@ namespace Bss\FacebookPixel\Model;
 class Session extends \Magento\Framework\Session\SessionManager
 {
     /**
-     * @param $data
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setAddToCart($data)
     {
@@ -51,8 +51,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @param $data
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setAddToWishlist($data)
     {
@@ -82,8 +82,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @param $data
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setAddSubscribe($data)
     {
@@ -121,7 +121,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setInitiateCheckout($data)
     {
@@ -151,7 +152,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setSearch($data)
     {
@@ -181,7 +183,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setRegister($data)
     {
@@ -203,8 +206,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @param $data
-     * @return $this
+     * @param array $data
+     * @return \Bss\FacebookPixel\Model\Session $this
      */
     public function setActionPage($data)
     {

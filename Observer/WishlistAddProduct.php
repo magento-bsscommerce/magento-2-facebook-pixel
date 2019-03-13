@@ -33,40 +33,16 @@ class WishlistAddProduct implements ObserverInterface
     protected $helper;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
-     * @var \Magento\Catalog\Model\Product
-     */
-    protected $productModel;
-
-    /**
-     * @var \Magento\Framework\Pricing\Helper\Data
-     */
-    protected $dataPrice;
-
-    /**
      * WishlistAddProduct constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Catalog\Model\Product $product
-     * @param \Magento\Framework\Pricing\Helper\Data $dataPrice
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Catalog\Model\Product $product,
-        \Magento\Framework\Pricing\Helper\Data $dataPrice
+        \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->helper        = $helper;
-        $this->storeManager = $storeManager;
-        $this->productModel = $product;
-        $this->dataPrice = $dataPrice;
     }
 
     /**

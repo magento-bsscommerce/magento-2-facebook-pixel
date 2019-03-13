@@ -45,13 +45,6 @@ class Code extends \Magento\Framework\View\Element\Template
     protected $catalogHelper;
 
     /**
-     * Tax config model
-     *
-     * @var \Magento\Tax\Model\Config
-     */
-    protected $taxConfig;
-
-    /**
      * Tax display flag
      *
      * @var null|int
@@ -104,14 +97,19 @@ class Code extends \Magento\Framework\View\Element\Template
     protected $fbPixelSession;
 
     /**
+     * @var \Magento\Framework\Serialize\Serializer\Json
+     */
+    protected $json;
+
+    /**
      * Code constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Catalog\Helper\Data $catalogHelper
-     * @param \Magento\Tax\Model\Config $taxConfig
      * @param \Magento\Checkout\Model\SessionFactory $checkoutSession
      * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+     * @param \Magento\Framework\Serialize\Serializer\Json $json
      * @param array $data
      */
     public function __construct(
@@ -119,18 +117,18 @@ class Code extends \Magento\Framework\View\Element\Template
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Catalog\Helper\Data $catalogHelper,
-        \Magento\Tax\Model\Config $taxConfig,
         \Magento\Checkout\Model\SessionFactory $checkoutSession,
         \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
+        \Magento\Framework\Serialize\Serializer\Json $json,
         array $data = []
     ) {
         $this->storeManager  = $context->getStoreManager();
         $this->helper        = $helper;
         $this->coreRegistry  = $coreRegistry;
         $this->catalogHelper = $catalogHelper;
-        $this->taxConfig     = $taxConfig;
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelSession = $fbPixelSession;
+        $this->json = $json;
         parent::__construct($context, $data);
     }
 
@@ -157,8 +155,8 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @param $action
-     * @param $listDisableCode
+     * @param  string $action
+     * @param array $listDisableCode
      * @return int
      */
     private function checkDisableMore($action, $listDisableCode)
@@ -185,8 +183,8 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @param $action
-     * @param $listDisableCode
+     * @param string $action
+     * @param array $listDisableCode
      * @return int
      */
     private function checkDisableMore2($action, $listDisableCode)
@@ -211,7 +209,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $action = $data['full_action_name'];
         if ($action == 'catalog_product_view') {
             if ($this->getProductData() !== null) {
-                $productData = json_encode($this->getProductData());
+                $productData = $this->json->serialize($this->getProductData());
             }
         }
         return $productData;
@@ -228,7 +226,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $action = $data['full_action_name'];
         if ($action == 'catalog_category_view') {
             if ($this->getCategoryData() !== null) {
-                $categoryData = json_encode($this->getCategoryData());
+                $categoryData = $this->json->serialize($this->getCategoryData());
             }
         }
         return $categoryData;
@@ -261,7 +259,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $registration = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/registration')
             && $session->hasRegister()) {
-            $registration = $this->helper->getPixelHtml('CompleteRegistration', $session->getRegister());
+            $registration = $this->helper->getPixelHtml($session->getRegister());
         }
         return $registration;
     }
@@ -276,7 +274,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $add_to_wishlist = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist')
             && $session->hasAddToWishlist()) {
-            $add_to_wishlist = $this->helper->getPixelHtml('AddToWishlist', $session->getAddToWishlist());
+            $add_to_wishlist = $this->helper->getPixelHtml($session->getAddToWishlist());
         }
         return $add_to_wishlist;
     }
@@ -291,10 +289,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $initiateCheckout = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')
             && $session->hasInitiateCheckout()) {
-            $initiateCheckout = $this->helper->getPixelHtml(
-                'InitiateCheckout',
-                $session->getInitiateCheckout()
-            );
+            $initiateCheckout = $this->helper->getPixelHtml($session->getInitiateCheckout());
         }
         return $initiateCheckout;
     }
@@ -309,7 +304,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $search = 404;
         if ($this->helper->getConfig('bss_facebook_pixel/event_tracking/search')
             && $session->hasSearch()) {
-            $search = $this->helper->getPixelHtml('Search', $session->getSearch());
+            $search = $this->helper->getPixelHtml($session->getSearch());
         }
         return $search;
     }
@@ -369,26 +364,10 @@ class Code extends \Magento\Framework\View\Element\Template
                 'st' => $shippingAddress['region'],
                 'zipcode' => $shippingAddress['postcode']
             ];
-            return json_encode($data);
+            return $this->json->serialize($data);
         } else {
             return 404;
         }
-    }
-
-    /**
-     * @return \Bss\FacebookPixel\Helper\Data
-     */
-    public function getHelper()
-    {
-        return $this->helper;
-    }
-
-    /**
-     * @return \Bss\FacebookPixel\Model\Session
-     */
-    public function getSession()
-    {
-        return $this->getHelper()->getSession();
     }
 
     /**
@@ -534,7 +513,7 @@ class Code extends \Magento\Framework\View\Element\Template
             // 1 - excluding tax
             // 2 - including tax
             // 3 - including and excluding tax
-            $flag = $this->taxConfig->getPriceDisplayType($this->getStoreId());
+            $flag = $this->helper->isTaxConfig()->getPriceDisplayType($this->getStoreId());
 
             // 0 means price excluding tax, 1 means price including tax
             if ($flag == 1) {
@@ -567,7 +546,7 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @param $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return mixed|string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -613,7 +592,7 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @param $product
+     * @param  \Magento\Catalog\Model\Product $product
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -634,7 +613,7 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @param $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -712,8 +691,8 @@ class Code extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @param $product
-     * @param $price
+     * @param \Magento\Catalog\Model\Product $product
+     * @param float|int $price
      * @return float
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

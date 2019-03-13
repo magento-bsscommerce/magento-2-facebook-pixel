@@ -21,42 +21,27 @@ use Magento\Framework\Event\ObserverInterface;
 
 class Subcribe implements ObserverInterface
 {
-
     /**
      * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
-    /**
-     * @var \Magento\Checkout\Model\Session
-     */
-    protected $checkoutSession;
+
     /**
      * @var \Bss\FacebookPixel\Helper\Data
      */
     protected $helper;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * Subcribe constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
-        $this->checkoutSession = $checkoutSession;
         $this->helper        = $helper;
-        $this->storeManager = $storeManager;
     }
 
     /**

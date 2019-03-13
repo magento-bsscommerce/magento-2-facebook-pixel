@@ -33,24 +33,16 @@ class Register implements ObserverInterface
     protected $fbPixelHelper;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * Register constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->fbPixelHelper  = $helper;
-        $this->storeManager = $storeManager;
     }
 
     /**

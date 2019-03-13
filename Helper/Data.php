@@ -20,33 +20,9 @@ namespace Bss\FacebookPixel\Helper;
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
-
-    /**
-     * @var \Magento\Framework\Module\ModuleListInterface
-     */
-    protected $moduleList;
-
-    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
-
-    /**
-     * Store object
-     *
-     * @var null|\Magento\Store\Model\Store
-     */
-    protected $store = null;
-
-    /**
-     * Store ID
-     *
-     * @var null|int
-     */
-    protected $storeId = null;
 
     /**
      * @var \Bss\FacebookPixel\Model\Session
@@ -54,24 +30,45 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $fbPixelSession;
 
     /**
+     * @var \Magento\Framework\Serialize\Serializer\Json
+     */
+    protected $json;
+
+    /**
+     * @var \Magento\Tax\Model\Config
+     */
+    protected $taxConfig;
+
+    /**
      * Data constructor.
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Magento\Framework\Serialize\Serializer\Json $json
+     * @param \Magento\Tax\Model\Config $taxConfig
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Bss\FacebookPixel\Model\Session $fbPixelSession
+        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Magento\Framework\Serialize\Serializer\Json $json,
+        \Magento\Tax\Model\Config $taxConfig
     ) {
         $this->scopeConfig          = $context->getScopeConfig();
-        $this->moduleList           = $moduleList;
         $this->storeManager = $storeManager;
         $this->fbPixelSession = $fbPixelSession;
+        $this->json = $json;
+        $this->taxConfig = $taxConfig;
 
         parent::__construct($context);
+    }
+
+    /**
+     * @return \Magento\Tax\Model\Config
+     */
+    public function isTaxConfig()
+    {
+        return $this->taxConfig;
     }
 
     /**
@@ -133,16 +130,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $event
-     * @param $data
+     * @param array $data
      * @return string
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getPixelHtml($event, $data = false)
+    public function getPixelHtml($data = false)
     {
         $json = 404;
         if ($data) {
-            $json =json_encode($data);
+            $json =$this->json->serialize($data);
         }
 
         return $json;

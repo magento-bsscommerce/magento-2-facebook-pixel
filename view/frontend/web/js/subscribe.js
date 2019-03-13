@@ -18,9 +18,8 @@ define([
     'jquery',
     'ko',
     'uiComponent',
-    'Magento_Customer/js/customer-data',
-    'Bss_FacebookPixel/js/code'
-], function (jQuery, ko, Component, customerData, code) {
+    'Magento_Customer/js/customer-data'
+], function (jQuery, ko, Component, customerData) {
     'use strict';
     return Component.extend({
         initialize: function () {

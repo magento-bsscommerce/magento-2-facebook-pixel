@@ -35,11 +35,6 @@ class AddToCart implements ObserverInterface
     protected $helper;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * @var \Magento\Framework\Pricing\Helper\Data
      */
     protected $dataPrice;
@@ -49,21 +44,15 @@ class AddToCart implements ObserverInterface
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\Pricing\Helper\Data $dataPrice
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Pricing\Helper\Data $dataPrice
+        \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->checkoutSession = $checkoutSession;
         $this->helper        = $helper;
-        $this->storeManager = $storeManager;
-        $this->dataPrice = $dataPrice;
     }
 
     /**

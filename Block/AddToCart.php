@@ -27,7 +27,7 @@ class AddToCart implements SectionSourceInterface
     protected $fbPixelSession;
 
     /**
-     * Atc constructor.
+     * AddToCart constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      */
     public function __construct(

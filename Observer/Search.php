@@ -21,7 +21,6 @@ use Magento\Framework\Event\ObserverInterface;
 
 class Search implements ObserverInterface
 {
-
     /**
      * @var \Bss\FacebookPixel\Model\Session
      */
@@ -40,30 +39,22 @@ class Search implements ObserverInterface
     protected $request;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * Search constructor.
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Search\Helper\Data $searchHelper
      * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      */
     public function __construct(
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Search\Helper\Data $searchHelper,
         \Magento\Framework\App\RequestInterface $request,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Bss\FacebookPixel\Model\Session $fbPixelSession
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->fbPixelHelper         = $helper;
         $this->searchHelper = $searchHelper;
         $this->request = $request;
-        $this->storeManager = $storeManager;
     }
 
     /**

@@ -20,8 +20,6 @@
  * @var $block \Bss\FacebookPixel\Block\Code
  */
 $pageView = $block->checkDisable();
-$helper = $block->getHelper();
-$session = $block->getSession();
 $data   = $block->getFacebookPixelData();
 $id     = $data['id'];
 $action = $data['full_action_name'];
