@@ -19,7 +19,7 @@ define([
     'jquery'
 ], function ($) {
     "use strict";
-    return function (config, element) {
+    return function (config) {
         var id = config.id;
         var action = config.action;
         var productData = config.productData;
