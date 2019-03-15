@@ -78,11 +78,27 @@ class AddToCart implements ObserverInterface
             if ($item->getProduct()->getTypeId() == $typeConfi) {
                 continue;
             }
-            $product['contents'][] = [
-                'id' => $item->getSku(),
-                'name' => $item->getName(),
-                'quantity' => $item->getQtyToAdd()
-            ];
+            if ($item->getParentItem()) {
+                if ($item->getParentItem()->getProductType() == $typeConfi) {
+                    $product['contents'][] = [
+                        'id' => $item->getSku(),
+                        'name' => $item->getName(),
+                        'quantity' => $item->getParentItem()->getQtyToAdd()
+                    ];
+                } else {
+                    $product['contents'][] = [
+                        'id' => $item->getSku(),
+                        'name' => $item->getName(),
+                        'quantity' => $item->getData('qty')
+                    ];
+                }
+            } else {
+                $product['contents'][] = [
+                    'id' => $item->getSku(),
+                    'name' => $item->getName(),
+                    'quantity' => $item->getQtyToAdd()
+                ];
+            }
             $product['content_ids'][] = $item->getSku();
         }
 
