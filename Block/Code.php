@@ -96,11 +96,6 @@ class Code extends \Magento\Framework\View\Element\Template
     protected $fbPixelSession;
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Json
-     */
-    protected $json;
-
-    /**
      * Code constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Bss\FacebookPixel\Helper\Data $helper
@@ -108,7 +103,6 @@ class Code extends \Magento\Framework\View\Element\Template
      * @param \Magento\Catalog\Helper\Data $catalogHelper
      * @param \Magento\Checkout\Model\SessionFactory $checkoutSession
      * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
-     * @param \Magento\Framework\Serialize\Serializer\Json $json
      * @param array $data
      */
     public function __construct(
@@ -118,7 +112,6 @@ class Code extends \Magento\Framework\View\Element\Template
         \Magento\Catalog\Helper\Data $catalogHelper,
         \Magento\Checkout\Model\SessionFactory $checkoutSession,
         \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
-        \Magento\Framework\Serialize\Serializer\Json $json,
         array $data = []
     ) {
         $this->storeManager  = $context->getStoreManager();
@@ -127,7 +120,6 @@ class Code extends \Magento\Framework\View\Element\Template
         $this->catalogHelper = $catalogHelper;
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelSession = $fbPixelSession;
-        $this->json = $json;
         parent::__construct($context, $data);
     }
 
@@ -208,7 +200,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $action = $data['full_action_name'];
         if ($action == 'catalog_product_view') {
             if ($this->getProductData() !== null) {
-                $productData = $this->json->serialize($this->getProductData());
+                $productData = $this->helper->serializes($this->getProductData());
             }
         }
         return $productData;
@@ -225,7 +217,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $action = $data['full_action_name'];
         if ($action == 'catalog_category_view') {
             if ($this->getCategoryData() !== null) {
-                $categoryData = $this->json->serialize($this->getCategoryData());
+                $categoryData = $this->helper->serializes($this->getCategoryData());
             }
         }
         return $categoryData;
@@ -320,7 +312,17 @@ class Code extends \Magento\Framework\View\Element\Template
 
         if ($orderId) {
             $customerEmail = $order->getCustomerEmail();
-            $shippingAddress = $order->getShippingAddress()->getData();
+            if ($order->getShippingAddress()) {
+                $addressData = $order->getShippingAddress();
+            } else {
+                $addressData = $order->getBillingAddress();
+            }
+
+            if ($addressData) {
+                $customerData = $addressData->getData();
+            } else {
+                $customerData = null;
+            }
             $product = [
                 'content_ids' => [],
                 'contents' => [],
@@ -355,18 +357,30 @@ class Code extends \Magento\Framework\View\Element\Template
                 'num_items' => $num_item,
                 'currency' => $order->getOrderCurrencyCode(),
                 'email' => $customerEmail,
-                'phone' => $shippingAddress['telephone'],
-                'firtname' => $shippingAddress['firstname'],
-                'lastname' =>$shippingAddress['lastname'],
-                'city' => $shippingAddress['city'],
-                'country' => $shippingAddress['country_id'],
-                'st' => $shippingAddress['region'],
-                'zipcode' => $shippingAddress['postcode']
+                'phone' => $this->getValueByKey($customerData, 'telephone'),
+                'firtname' => $this->getValueByKey($customerData, 'firstname'),
+                'lastname' => $this->getValueByKey($customerData, 'lastname'),
+                'city' => $this->getValueByKey($customerData, 'city'),
+                'country' => $this->getValueByKey($customerData, 'country_id'),
+                'st' => $this->getValueByKey($customerData, 'region'),
+                'zipcode' => $this->getValueByKey($customerData, 'postcode')
             ];
-            return $this->json->serialize($data);
+            return $this->helper->serializes($data);
         } else {
             return 404;
         }
+    }
+
+    /**
+     * @param $array
+     * @param $key
+     * @return string
+     */
+    protected function getValueByKey($array, $key) {
+        if (!empty($array) && isset($array[$key])) {
+            return $array[$key];
+        }
+        return '';
     }
 
     /**

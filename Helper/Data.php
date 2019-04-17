@@ -30,11 +30,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $fbPixelSession;
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Json
-     */
-    protected $json;
-
-    /**
      * @var \Magento\Tax\Model\Config
      */
     protected $taxConfig;
@@ -44,23 +39,33 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
-     * @param \Magento\Framework\Serialize\Serializer\Json $json
      * @param \Magento\Tax\Model\Config $taxConfig
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Magento\Framework\Serialize\Serializer\Json $json,
         \Magento\Tax\Model\Config $taxConfig
     ) {
         $this->scopeConfig          = $context->getScopeConfig();
         $this->storeManager = $storeManager;
         $this->fbPixelSession = $fbPixelSession;
-        $this->json = $json;
         $this->taxConfig = $taxConfig;
 
         parent::__construct($context);
+    }
+
+    /**
+     * @param array $data
+     * @return false|string
+     */
+    public function serializes($data)
+    {
+        $result = json_encode($data);
+        if (false === $result) {
+            throw new \InvalidArgumentException('Unable to serialize value.');
+        }
+        return $result;
     }
 
     /**
@@ -137,7 +142,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $json = 404;
         if ($data) {
-            $json =$this->json->serialize($data);
+            $json =$this->serializes($data);
         }
 
         return $json;
