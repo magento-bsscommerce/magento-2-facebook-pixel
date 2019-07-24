@@ -376,7 +376,8 @@ class Code extends \Magento\Framework\View\Element\Template
      * @param $key
      * @return string
      */
-    protected function getValueByKey($array, $key) {
+    protected function getValueByKey($array, $key)
+    {
         if (!empty($array) && isset($array[$key])) {
             return $array[$key];
         }
