@@ -25,34 +25,31 @@ class AddToCart implements ObserverInterface
      * @var \Bss\FacebookPixel\Model\Session
      */
     protected $fbPixelSession;
-    /**
-     * @var \Magento\Checkout\Model\Session
-     */
-    protected $checkoutSession;
+
     /**
      * @var \Bss\FacebookPixel\Helper\Data
      */
     protected $helper;
 
     /**
-     * @var \Magento\Framework\Pricing\Helper\Data
+     * @var \Magento\Catalog\Model\ProductRepository
      */
-    protected $dataPrice;
+    protected $productRepository;
 
     /**
      * AddToCart constructor.
      * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
+     * @param \Magento\Catalog\Model\ProductRepository $productRepository
      */
     public function __construct(
         \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Bss\FacebookPixel\Helper\Data $helper
+        \Bss\FacebookPixel\Helper\Data $helper,
+        \Magento\Catalog\Model\ProductRepository $productRepository
     ) {
         $this->fbPixelSession = $fbPixelSession;
-        $this->checkoutSession = $checkoutSession;
         $this->helper        = $helper;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -70,6 +67,7 @@ class AddToCart implements ObserverInterface
         }
         $product = [
             'content_ids' => [],
+            'value' => 0,
             'currency' => ""
         ];
 
@@ -85,6 +83,7 @@ class AddToCart implements ObserverInterface
                         'name' => $item->getName(),
                         'quantity' => $item->getParentItem()->getQtyToAdd()
                     ];
+                    $product['value'] += $item->getProduct()->getFinalPrice() * $item->getParentItem()->getQtyToAdd();
                 } else {
                     $product['contents'][] = [
                         'id' => $item->getSku(),
@@ -94,12 +93,13 @@ class AddToCart implements ObserverInterface
                 }
             } else {
                 $product['contents'][] = [
-                    'id' => $item->getSku(),
+                    'id' => $this->checkBundleSku($item),
                     'name' => $item->getName(),
                     'quantity' => $item->getQtyToAdd()
                 ];
+                $product['value'] += $item->getProduct()->getFinalPrice() * $item->getQtyToAdd();;
             }
-            $product['content_ids'][] = $item->getSku();
+            $product['content_ids'][] = $this->checkBundleSku($item);
         }
 
         $data = [
@@ -107,10 +107,26 @@ class AddToCart implements ObserverInterface
             'content_ids' => $product['content_ids'],
             'contents' => $product['contents'],
             'currency' => $this->helper->getCurrencyCode(),
+            'value' => $product['value']
         ];
 
         $this->fbPixelSession->setAddToCart($data);
 
         return true;
+    }
+
+    /**
+     * @param mixed $item
+     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function checkBundleSku($item)
+    {
+        $typeBundle = \Magento\Bundle\Model\Product\Type::TYPE_CODE;
+        if ($item->getProductType() == $typeBundle) {
+            $skuBundleProduct= $this->productRepository->getById($item->getProductId())->getSku();
+            return $skuBundleProduct;
+        }
+        return $item->getSku();
     }
 }
