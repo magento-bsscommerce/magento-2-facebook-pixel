@@ -25,32 +25,32 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $storeManager;
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
-     */
-    protected $fbPixelSession;
-
-    /**
      * @var \Magento\Tax\Model\Config
      */
     protected $taxConfig;
 
     /**
+     * @var \Magento\Framework\Json\EncoderInterface
+     */
+    protected $jsonEncoder;
+
+    /**
      * Data constructor.
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
      * @param \Magento\Tax\Model\Config $taxConfig
+     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
-        \Magento\Tax\Model\Config $taxConfig
+        \Magento\Tax\Model\Config $taxConfig,
+        \Magento\Framework\Json\EncoderInterface $jsonEncoder
     ) {
         $this->scopeConfig          = $context->getScopeConfig();
         $this->storeManager = $storeManager;
-        $this->fbPixelSession = $fbPixelSession;
         $this->taxConfig = $taxConfig;
+        $this->jsonEncoder = $jsonEncoder;
 
         parent::__construct($context);
     }
@@ -61,7 +61,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function serializes($data)
     {
-        $result = json_encode($data);
+        $result = $this->jsonEncoder->encode($data);
         if (false === $result) {
             throw new \InvalidArgumentException('Unable to serialize value.');
         }
@@ -81,9 +81,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function listPageDisable()
     {
-        $list = $this->getConfig(
-            'bss_facebook_pixel/event_tracking/disable_code'
-        );
+        $list = $this->returnDisablePage();
         if ($list) {
             return explode(',', $list);
         } else {
@@ -107,6 +105,162 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * @param null $scope
+     * @return string
+     */
+    public function returnPixelId($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/general/pixel_id',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return mixed
+     */
+    public function returnDisablePage($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/disable_code',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isProductView($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/product_view',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isCategoryView($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/category_view',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isInitiateCheckout($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/initiate_checkout',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isPurchase($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/purchase',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isAddToWishList($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/add_to_wishlist',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isAddToCart($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/add_to_cart',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isRegistration($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/registration',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isSubscribe($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/subscribe',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return bool
+     */
+    public function isSearch($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'bss_facebook_pixel/event_tracking/search',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
+     * @param null $scope
+     * @return mixed
+     */
+    public function isIncludeTax($scope = null)
+    {
+        return $this->scopeConfig->getValue(
+            'tax/calculation/price_includes_tax',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scope
+        );
+    }
+
+    /**
      * Add slashes to string and prepares string for javascript.
      *
      * @param string $str
@@ -124,14 +278,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getCurrencyCode()
     {
         return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
-    }
-
-    /**
-     * @return \Bss\FacebookPixel\Model\Session
-     */
-    public function getSession()
-    {
-        return $this->fbPixelSession;
     }
 
     /**

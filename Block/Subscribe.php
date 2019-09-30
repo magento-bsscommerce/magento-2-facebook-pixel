@@ -22,16 +22,16 @@ use Magento\Customer\CustomerData\SectionSourceInterface;
 class Subscribe implements SectionSourceInterface
 {
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
     /**
      * Subscribe constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
     ) {
         $this->fbPixelSession = $fbPixelSession;
     }
@@ -47,10 +47,10 @@ class Subscribe implements SectionSourceInterface
             'events' => []
         ];
 
-        if ($this->fbPixelSession->hasAddSubscribe()) {
+        if ($this->fbPixelSession->create()->hasAddSubscribe()) {
             $data['events'][] = [
                 'eventName' => 'Subscribe',
-                'eventAdditional' => $this->fbPixelSession->getAddSubscribe()
+                'eventAdditional' => $this->fbPixelSession->create()->getAddSubscribe()
             ];
         }
         return $data;

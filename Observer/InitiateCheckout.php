@@ -23,12 +23,12 @@ class InitiateCheckout implements ObserverInterface
 {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var \Magento\Checkout\Model\SessionFactory
      */
     protected $checkoutSession;
 
@@ -38,32 +38,25 @@ class InitiateCheckout implements ObserverInterface
     protected $fbPixelHelper;
 
     /**
-     * @var \Magento\Framework\App\RequestInterface
-     */
-    protected $request;
-
-    /**
      * @var \Magento\Framework\Pricing\Helper\Data
      */
     protected $dataPrice;
 
     /**
      * InitiateCheckout constructor.
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Checkout\Model\SessionFactory $checkoutSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
-     * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
+     * @param \Magento\Framework\Pricing\Helper\Data $dataPrice
      */
     public function __construct(
-        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Checkout\Model\SessionFactory $checkoutSession,
         \Bss\FacebookPixel\Helper\Data $helper,
-        \Magento\Framework\App\RequestInterface $request,
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Magento\Framework\Pricing\Helper\Data $dataPrice
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->fbPixelHelper         = $helper;
-        $this->request = $request;
         $this->fbPixelSession = $fbPixelSession;
         $this->dataPrice = $dataPrice;
     }
@@ -76,10 +69,11 @@ class InitiateCheckout implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/initiate_checkout')) {
+        if (!$this->fbPixelHelper->isInitiateCheckout()) {
             return true;
         }
-        if (empty($this->checkoutSession->getQuote()->getAllVisibleItems())) {
+        $checkout = $this->checkoutSession->create();
+        if (empty($checkout->getQuote()->getAllVisibleItems())) {
             return true;
         }
 
@@ -89,7 +83,7 @@ class InitiateCheckout implements ObserverInterface
             'value' => "",
             'currency' => ""
         ];
-        $items = $this->checkoutSession->getQuote()->getAllVisibleItems();
+        $items = $checkout->getQuote()->getAllVisibleItems();
         foreach ($items as $item) {
             $product['contents'][] = [
                 'id' => $item->getSku(),
@@ -103,10 +97,10 @@ class InitiateCheckout implements ObserverInterface
             'content_ids' => $product['content_ids'],
             'contents' => $product['contents'],
             'content_type' => 'product',
-            'value' => $this->checkoutSession->getQuote()->getGrandTotal(),
+            'value' => $checkout->getQuote()->getGrandTotal(),
             'currency' => $this->fbPixelHelper->getCurrencyCode(),
         ];
-        $this->fbPixelSession->setInitiateCheckout($data);
+        $this->fbPixelSession->create()->setInitiateCheckout($data);
 
         return true;
     }

@@ -23,7 +23,7 @@ class WishlistAddProduct implements ObserverInterface
 {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
@@ -34,11 +34,11 @@ class WishlistAddProduct implements ObserverInterface
 
     /**
      * WishlistAddProduct constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
@@ -54,7 +54,7 @@ class WishlistAddProduct implements ObserverInterface
     {
         $product = $observer->getItem()->getProduct();
         /** @var \Magento\Catalog\Model\Product $product */
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_wishlist') || !$product) {
+        if (!$this->helper->isAddToWishList() || !$product) {
             return true;
         }
         
@@ -65,7 +65,7 @@ class WishlistAddProduct implements ObserverInterface
             'currency' => $this->helper->getCurrencyCode()
         ];
 
-        $this->fbPixelSession->setAddToWishlist($data);
+        $this->fbPixelSession->create()->setAddToWishlist($data);
         
         return true;
     }

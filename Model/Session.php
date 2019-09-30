@@ -17,6 +17,11 @@
  */
 namespace Bss\FacebookPixel\Model;
 
+/**
+ * Class Session
+ * @package Bss\FacebookPixel\Model
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
 class Session extends \Magento\Framework\Session\SessionManager
 {
     /**

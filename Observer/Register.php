@@ -23,7 +23,7 @@ class Register implements ObserverInterface
 {
 
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
@@ -34,11 +34,11 @@ class Register implements ObserverInterface
 
     /**
      * Register constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper
     ) {
         $this->fbPixelSession = $fbPixelSession;
@@ -53,7 +53,7 @@ class Register implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $customer = $observer->getEvent()->getCustomer();
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/registration')
+        if (!$this->fbPixelHelper->isRegistration()
             || !$customer
         ) {
             return true;
@@ -65,7 +65,7 @@ class Register implements ObserverInterface
             'ln' => $customer->getLastName()
         ];
 
-        $this->fbPixelSession->setRegister($data);
+        $this->fbPixelSession->create()->setRegister($data);
 
         return true;
     }

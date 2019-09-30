@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class Search implements ObserverInterface
 {
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
     /**
@@ -43,13 +43,13 @@ class Search implements ObserverInterface
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Search\Helper\Data $searchHelper
      * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      */
     public function __construct(
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Search\Helper\Data $searchHelper,
         \Magento\Framework\App\RequestInterface $request,
-        \Bss\FacebookPixel\Model\Session $fbPixelSession
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
     ) {
         $this->fbPixelSession = $fbPixelSession;
         $this->fbPixelHelper         = $helper;
@@ -73,14 +73,14 @@ class Search implements ObserverInterface
                 $text[$key] = $value;
             }
         }
-        if (!$this->fbPixelHelper->getConfig('bss_facebook_pixel/event_tracking/search') || !$text) {
+        if (!$this->fbPixelHelper->isSearch() || !$text) {
             return true;
         }
 
         $data = [
             'search_string' => $text
         ];
-        $this->fbPixelSession->setSearch($data);
+        $this->fbPixelSession->create()->setSearch($data);
 
         return true;
     }

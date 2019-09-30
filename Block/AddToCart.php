@@ -22,16 +22,16 @@ use Magento\Customer\CustomerData\SectionSourceInterface;
 class AddToCart implements SectionSourceInterface
 {
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
     /**
      * AddToCart constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
     ) {
         $this->fbPixelSession = $fbPixelSession;
     }
@@ -47,12 +47,12 @@ class AddToCart implements SectionSourceInterface
             'events' => []
         ];
 
-        if ($this->fbPixelSession->hasAddToCart()) {
+        if ($this->fbPixelSession->create()->hasAddToCart()) {
             // Get the add-to-cart information since it's unique to the user
             // but might be displayed on a cached page
             $data['events'][] = [
                 'eventName' => 'AddToCart',
-                'eventAdditional' => $this->fbPixelSession->getAddToCart()
+                'eventAdditional' => $this->fbPixelSession->create()->getAddToCart()
             ];
         }
         return $data;

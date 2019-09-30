@@ -22,7 +22,7 @@ use Magento\Framework\Event\ObserverInterface;
 class AddToCart implements ObserverInterface
 {
     /**
-     * @var \Bss\FacebookPixel\Model\Session
+     * @var \Bss\FacebookPixel\Model\SessionFactory
      */
     protected $fbPixelSession;
 
@@ -38,12 +38,12 @@ class AddToCart implements ObserverInterface
 
     /**
      * AddToCart constructor.
-     * @param \Bss\FacebookPixel\Model\Session $fbPixelSession
+     * @param \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession
      * @param \Bss\FacebookPixel\Helper\Data $helper
      * @param \Magento\Catalog\Model\ProductRepository $productRepository
      */
     public function __construct(
-        \Bss\FacebookPixel\Model\Session $fbPixelSession,
+        \Bss\FacebookPixel\Model\SessionFactory $fbPixelSession,
         \Bss\FacebookPixel\Helper\Data $helper,
         \Magento\Catalog\Model\ProductRepository $productRepository
     ) {
@@ -62,7 +62,7 @@ class AddToCart implements ObserverInterface
 
         $items = $observer->getItems();
         $typeConfi = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
-        if (!$this->helper->getConfig('bss_facebook_pixel/event_tracking/add_to_cart') || !$items) {
+        if (!$this->helper->isAddToCart() || !$items) {
             return true;
         }
         $product = [
@@ -97,7 +97,7 @@ class AddToCart implements ObserverInterface
                     'name' => $item->getName(),
                     'quantity' => $item->getQtyToAdd()
                 ];
-                $product['value'] += $item->getProduct()->getFinalPrice() * $item->getQtyToAdd();;
+                $product['value'] += $item->getProduct()->getFinalPrice() * $item->getQtyToAdd();
             }
             $product['content_ids'][] = $this->checkBundleSku($item);
         }
@@ -110,7 +110,7 @@ class AddToCart implements ObserverInterface
             'value' => $product['value']
         ];
 
-        $this->fbPixelSession->setAddToCart($data);
+        $this->fbPixelSession->create()->setAddToCart($data);
 
         return true;
     }
