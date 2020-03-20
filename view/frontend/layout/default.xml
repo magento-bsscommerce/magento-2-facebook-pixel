@@ -26,6 +26,7 @@
                    before="-"
                    ifconfig="bss_facebook_pixel/general/active" />
             <block class="Magento\Framework\View\Element\Template" name="bss.fbpixel.atc" after="bss.facebook.pixel."
+                   ifconfig="bss_facebook_pixel/general/active"
                    template="Bss_FacebookPixel::atc.phtml">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
@@ -38,6 +39,7 @@
                 </arguments>
             </block>
             <block class="Magento\Framework\View\Element\Template" name="bss.fbpixel.subscribe" after="bss.facebook.pixel."
+                   ifconfig="bss_facebook_pixel/general/active"
                    template="Bss_FacebookPixel::subscribe.phtml">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">

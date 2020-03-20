@@ -156,7 +156,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $productData = 404;
         $data   = $this->getFacebookPixelData();
         $action = $data['full_action_name'];
-        if ($action == 'catalog_product_view') {
+        if ($action == 'catalog_product_view' && $this->helper->isProductView()) {
             if ($this->getProductData() !== null) {
                 $productData = $this->helper->serializes($this->getProductData());
             }
@@ -173,7 +173,7 @@ class Code extends \Magento\Framework\View\Element\Template
         $categoryData = 404;
         $data   = $this->getFacebookPixelData();
         $action = $data['full_action_name'];
-        if ($action == 'catalog_category_view') {
+        if ($action == 'catalog_category_view' && $this->helper->isCategoryView()) {
             if ($this->getCategoryData() !== null) {
                 $categoryData = $this->helper->serializes($this->getCategoryData());
             }
