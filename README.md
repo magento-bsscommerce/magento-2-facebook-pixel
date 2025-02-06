@@ -46,7 +46,7 @@ This extension is packed with features to meet all your tracking and optimizatio
 **[Backend Demo](https://facebook-pixel.demom2.bsscommerce.com/admin?auto=1)**
 **[Frontend Demo](https://facebook-pixel.demom2.bsscommerce.com/)**
 
-**[Full Feature List](https://bsscommerce.com/magento-2-facebook-pixel-extension.html)**
+**Full Feature List for Facebook Pixel Magento 2: **[https://bsscommerce.com/magento-2-facebook-pixel-extension.html](https://bsscommerce.com/magento-2-facebook-pixel-extension.html)**
 
 ## Installation
 
@@ -61,4 +61,37 @@ php bin/magento setup:di:compile
 php bin/magento setup:static-content:deploy -f
 php bin/magento cache:clean
 php bin/magento cache:flush
+```
 
+## Frequently Asked Questions (FAQ)
+
+**Question:** "What events are tracked by the Facebook Pixel with this extension?"
+
+**Answer:**
+
+The **Magento 2 Facebook Pixel Extension** typically tracks a comprehensive set of events, including both standard and custom events.
+
+*   **Standard Events:** The extension usually automatically tracks standard Facebook Pixel events such as `ViewContent`, `Search`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `AddPaymentInfo`, `AddShippingInfo`, and `Purchase`.
+*   **Custom Events:**  Many extensions also allow you to set up and track custom events to measure specific user interactions relevant to your business and marketing goals. *Refer to the full feature list and documentation to see the exact list of tracked events and custom event capabilities.*
+
+**Question:** "Do I need coding skills to install and configure this Facebook Pixel extension?"
+
+**Answer:**
+
+No, generally, you **do not need advanced coding skills** to install and configure the **Magento 2 Facebook Pixel Extension**.
+
+*   **Easy Installation:**  Installation is usually straightforward, often involving Composer or manual upload, with clear instructions provided.
+*   **Admin Panel Configuration:**  Configuration is primarily done through the Magento admin panel, with user-friendly settings to enter your Pixel ID, select events to track, and configure other options.
+*   *However, basic familiarity with Magento 2 admin and following instructions is helpful. For advanced customization or troubleshooting, some technical knowledge might be beneficial or you can contact support.*
+
+**Question:** "Will this Facebook Pixel extension slow down my Magento 2 store?"
+
+**Answer:**
+
+Well-developed **Magento 2 Facebook Pixel Extensions** are designed to be performance-friendly and have minimal impact on your store's loading speed.
+
+*   **Optimized Code:** Reputable extensions are built with optimized code to ensure efficient tracking without slowing down your website.
+*   **Asynchronous Loading:**  Pixel scripts are often loaded asynchronously, meaning they don't block other page elements from loading.
+*   **Minimal Impact:** The Facebook Pixel script itself is generally lightweight.
+
+*To ensure optimal performance, it's always recommended to follow best practices for Magento 2 performance optimization in general, regardless of extension usage.  Test your site speed after installation to confirm it meets your expectations.*
