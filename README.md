@@ -43,10 +43,10 @@ This extension is packed with features to meet all your tracking and optimizatio
 *   **Import/Export Configuration:**  Easily backup and restore configurations, saving setup time.
 *   **Frontend Pixel Check:**  Instantly verify Pixel installation and functionality directly on your website's frontend.
 
-**[Backend Demo](https://facebook-pixel.demom2.bsscommerce.com/admin?auto=1)**
-**[Frontend Demo](https://facebook-pixel.demom2.bsscommerce.com/)**
+**[Backend Demo Luma](https://facebook-pixel.demom2.bsscommerce.com/admin?auto=1)** 
+**[Frontend Demo Luma](https://facebook-pixel.demom2.bsscommerce.com/)**
 
-**Full Feature List for Facebook Pixel Magento 2: **[https://bsscommerce.com/magento-2-facebook-pixel-extension.html](https://bsscommerce.com/magento-2-facebook-pixel-extension.html)**
+Full Feature List for Facebook Pixel Magento 2: **[https://bsscommerce.com/magento-2-facebook-pixel-extension.html](https://bsscommerce.com/magento-2-facebook-pixel-extension.html)**
 
 ## Installation
 
